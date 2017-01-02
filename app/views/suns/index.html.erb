@@ -1,0 +1,9 @@
+<%= @galaxy.name %>
+
+<% @suns.each do |sun| %>
+  <%= sun.name %>
+  <%= "Number of planets : #{sun.planets.count}" %>
+  <%= link_to "#{sun.name}", galaxy_sun_path(@galaxy, sun) %>
+<% end %>
+
+

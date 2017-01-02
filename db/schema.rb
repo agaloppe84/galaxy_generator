@@ -11,10 +11,44 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170102120205) do
+ActiveRecord::Schema.define(version: 20170102180224) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "galaxies", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "number_of_suns"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  create_table "planets", force: :cascade do |t|
+    t.string   "name"
+    t.float    "radius"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "sun_id"
+  end
+
+  add_index "planets", ["sun_id"], name: "index_planets_on_sun_id", using: :btree
+
+  create_table "suns", force: :cascade do |t|
+    t.string   "name"
+    t.float    "solar_distance"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.integer  "galaxy_id"
+    t.integer  "number_of_planets"
+    t.float    "mass"
+    t.float    "radius"
+    t.string   "solar_type"
+    t.string   "chromaticity"
+    t.float    "ecliptic_distance"
+    t.string   "solar_class"
+  end
+
+  add_index "suns", ["galaxy_id"], name: "index_suns_on_galaxy_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -34,4 +68,6 @@ ActiveRecord::Schema.define(version: 20170102120205) do
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
+  add_foreign_key "planets", "suns"
+  add_foreign_key "suns", "galaxies"
 end

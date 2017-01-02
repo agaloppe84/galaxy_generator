@@ -1,0 +1,50 @@
+
+<%= @galaxy.name %>
+<br>
+<br>
+<br>
+<br>
+
+<% @galaxy.suns.each do |sun| %>
+  <%= "Name : #{sun.name}" %>
+  <%= "Class : #{sun.solar_class}" %>
+  <%= "Type : #{sun.solar_type}" %>
+  <%= "Chromaticity : #{sun.chromaticity}" %>
+  <%= "Ecliptic distance : #{sun.ecliptic_distance}" %>
+  <%= "Mass : #{sun.mass}" %>
+  <%= "Radius : #{sun.radius}" %>
+  <%= "Number of planets : #{sun.planets.count}" %>
+  <%= link_to "#{sun.name}", galaxy_sun_path(@galaxy, sun) %>
+  <br>
+  <br>
+<% end %>
+
+
+<%= "F stars : #{@f_stars_size}" %>
+<br>
+<%= "G stars : #{@g_stars_size}" %>
+<br>
+<%= "O stars : #{@o_stars_size}" %>
+<br>
+<%= "A stars : #{@a_stars_size}" %>
+<br>
+<%= "B stars : #{@b_stars_size}" %>
+<br>
+<%= "K stars : #{@k_stars_size}" %>
+<br>
+<%= "M stars : #{@m_stars_size}" %>
+<br>
+<%= "L stars : #{@l_stars_size}" %>
+<br>
+<%= "T stars : #{@t_stars_size}" %>
+<br>
+<%= "Y stars : #{@y_stars_size}" %>
+<br>
+<%= "Black holes : #{@bh_stars_size}" %>
+<br>
+<%= "Massive black holes : #{@mbh_stars_size}" %>
+<br>
+<%= "Neutron stars : #{@ne_stars_size}" %>
+<br>
+<%= "Blue HyperGiant stars : #{@byg_stars_size}" %>
+<br>
