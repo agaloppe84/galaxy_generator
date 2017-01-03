@@ -1,6 +1,74 @@
 <%= @sun.name %>
 
 <% @sun.planets.each do |planet| %>
-  <%= planet.name %>
+  <div class="planet-name-big"><%= planet.name.capitalize %></div>
+
+  <div class="planet-infos-container">
+
+
+    <div class="planet-info-small"><%= "Radius : #{planet_radius_in_km(planet.radius)} Km (#{radius_in_earth(planet_radius_in_km(planet.radius))} x earth)" %></div>
+    <div class="planet-info-small"><%= "Mass : #{planet_mass_in_kg(planet.mass)} Kg (#{mass_in_earth(planet_mass_in_kg(planet.mass))} x earth)" %></div>
+    <div class="planet-info-small"><%= "Gravity : #{planet.gravity} m/s (#{gravity_in_g(planet.gravity)}g)" %></div>
+    <div class="planet-info-small"><%= "Temperature : #{planet.temperature} Degres C°" %></div>
+    <div class="planet-info-small"><%= "Orbital period : #{planet.orbital_period} Days (#{revolution_in_years(planet.orbital_period)} Years)" %></div>
+    <div class="planet-info-small"><%= "Orbital speed : #{speed_in_kms(planet.orbital_speed)} Km/s" %></div>
+    <div class="planet-info-small"><%= "Distance from the sun : #{planet.solar_distance} UA (#{planet.solar_distance.round(3)} x earth)" %></div>
+    <div class="planet-info-small"><%= "Planet type : #{planet.planet_type}" %></div>
+    <div class="planet-info-small"><%= "Atmosphere : #{planet.atmosphere}" %></div>
+    <div class="planet-info-small"><%= "Water : #{planet.water}" %></div>
+    <div class="planet-info-small"><%= "Liquid water : #{planet.liquid_water}" %></div>
+    <div class="planet-info-small"><%= "Life : #{planet.life}" %></div>
+
+    <div class="planet-picture planet-animation" style="animation-duration: <%= planet.orbital_speed/10000 %>s">
+
+      <div class="carret"></div>
+
+    </div>
+
+  </div>
   <%= link_to "#{planet.name}", galaxy_sun_planet_path(@galaxy, @sun, planet) %>
 <% end %>
+
+
+
+<div class="dim-container">
+  <div class="system-left-menu">
+    <div class="left-menu-header">
+      <div class="sun-name"><%= "Sun : #{@sun.name}" %></div>
+      <div class="sun-planet-count"><%= "Solar class : #{@sun.solar_class}" %></div>
+      <div class="sun-planet-count"><%= "Solar type : #{@sun.solar_type}" %></div>
+      <div class="sun-planet-count"><%= "Chromaticity : #{@sun.chromaticity}" %></div>
+      <div class="sun-planet-count"><%= "Planets : #{@sun.planets.count}" %></div>
+      <div class="dim-trigger">small view</div>
+    </div>
+  </div>
+<div class="system-with-sun-and-planets">
+
+
+
+  <div class="sun-system" style="width: 50px;height: 50px;left: calc(50% - 50px/2);top: calc(50% - 50px/2)"></div>
+  <% @sun.planets.each do |planet| %>
+    <div class="planet-center" style="width: 50px;height: 50px;left: calc(50% - 50px/2);top: calc(50% - 50px/2)">
+      <div class="planet-center-test planet-animation" style="animation-duration: <%= planet.orbital_period/12 %>s;">
+        <div class="planet-orbit planet-animation-reverse" style="right: -<%= planet.solar_distance * 40 %>px;width: <%= planet.radius.to_i * 2 %>px;height: <%= planet.radius.to_i * 2 %>px;top: calc(50% - (<%= planet.radius.to_i / 2 %>px));animation-duration: <%= planet.orbital_period/12 %>s;">
+          <div class="planet-orbit-name-container">
+
+            <div class="name-line" style="top: <%= (planet.radius.to_i * 2)+8 %>px;left: <%= (planet.radius.to_i)+8 %>px;">
+              <div class="name-line-rel-cont">
+                <div class="dynamic-planet-name2">
+                  <%= planet.name.capitalize %>
+                  <div class="dynamic-planet-infos"><%= "Radius : #{planet_radius_in_km(planet.radius)} Km" %></div>
+                  <div class="dynamic-planet-infos"><%= "Mass : #{planet_mass_in_kg(planet.mass)} Kg" %></div>
+                  <div class="dynamic-planet-infos"><%= "Solar distance : #{planet.solar_distance} UA" %></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="orbit-circle" style="width: <%= ((planet.solar_distance*2) * 40)+50-(planet.radius.to_i*2) %>px;height: <%= ((planet.solar_distance*2) * 40)+50-(planet.radius.to_i*2) %>px;top: calc(50% - <%= ((planet.solar_distance) * 40)+25-(planet.radius.to_i*1) %>px );right: calc(50% - <%= ((planet.solar_distance) * 40)+25-(planet.radius.to_i*1) %>px);"></div>
+      </div>
+    </div>
+  <% end %>
+
+</div>
+</div>

@@ -1,1 +1,21 @@
-<%= @planet.name %>
+<div class="planet-name-big"><%= @planet.name.capitalize %></div>
+
+<div class="planet-infos-container">
+
+
+  <div class="planet-info-small"><%= "Radius : #{planet_radius_in_km(@planet.radius)} Km (#{radius_in_earth(planet_radius_in_km(@planet.radius))} x earth)" %></div>
+  <div class="planet-info-small"><%= "Mass : #{planet_mass_in_kg(@planet.mass)} Kg (#{mass_in_earth(planet_mass_in_kg(@planet.mass))} x earth)" %></div>
+  <div class="planet-info-small"><%= "Gravity : #{@planet.gravity} m/s (#{gravity_in_g(@planet.gravity)}g)" %></div>
+  <div class="planet-info-small"><%= "Temperature : #{@planet.temperature} Degres C°" %></div>
+  <div class="planet-info-small"><%= "Orbital period : #{@planet.orbital_period} Days (#{revolution_in_years(@planet.orbital_period)} Years)" %></div>
+  <div class="planet-info-small"><%= "Orbital speed : #{speed_in_kms(@planet.orbital_speed)} Km/s" %></div>
+  <div class="planet-info-small"><%= "Distance from the sun : #{@planet.solar_distance} UA (#{@planet.solar_distance.round(3)} x earth)" %></div>
+  <div class="planet-info-small"><%= "Planet type : #{@planet.planet_type}" %></div>
+  <div class="planet-info-small"><%= "Atmosphere : #{@planet.atmosphere}" %></div>
+  <div class="planet-info-small"><%= "Water : #{@planet.water}" %></div>
+  <div class="planet-info-small"><%= "Liquid water : #{@planet.liquid_water}" %></div>
+  <div class="planet-info-small"><%= "Life : #{@planet.life}" %></div>
+
+
+
+</div>

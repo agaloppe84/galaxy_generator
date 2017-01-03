@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170102180224) do
+ActiveRecord::Schema.define(version: 20170102215922) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,9 +26,22 @@ ActiveRecord::Schema.define(version: 20170102180224) do
   create_table "planets", force: :cascade do |t|
     t.string   "name"
     t.float    "radius"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
     t.integer  "sun_id"
+    t.float    "solar_mass"
+    t.float    "solar_radius"
+    t.float    "solar_distance"
+    t.float    "orbital_period"
+    t.float    "orbital_speed"
+    t.float    "gravity"
+    t.float    "temperature"
+    t.string   "planet_type"
+    t.boolean  "atmosphere"
+    t.boolean  "water"
+    t.boolean  "liquid_water"
+    t.boolean  "life"
+    t.float    "mass"
   end
 
   add_index "planets", ["sun_id"], name: "index_planets_on_sun_id", using: :btree

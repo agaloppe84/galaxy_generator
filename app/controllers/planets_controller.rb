@@ -20,7 +20,22 @@ class PlanetsController < ApplicationController
   end
 
   def planet_params
-    params.require(:planet).permit(:name, :radius, :sun_id)
+    params.require(:planet).permit(:name,
+                                   :radius,
+                                   :sun_id,
+                                   :solar_distance,
+                                   :solar_radius,
+                                   :solar_mass,
+                                   :orbital_period,
+                                   :mass,
+                                   :orbital_speed,
+                                   :gravity,
+                                   :planet_type,
+                                   :atmosphere,
+                                   :water,
+                                   :liquid_water,
+                                   :life,
+                                   :temperature)
   end
 
   def find_sun
