@@ -87,19 +87,22 @@
   transform: scale(0.5);
 }
 
+
+
 .transform-in-three-dim-none {
   transform: scale(0.5);
 }
 
 .system-left-menu {
   position: absolute;
-  width: 220px;
+  width: 300px;
   height: 100%;
   top: 0px;
   left: 0px;
-  background-color: rgba(55,55,55,0.9);
+  background-color: transparent;
   display: flex;
   flex-direction: column;
+  overflow-y: scroll;
   z-index: 30;
 }
 
@@ -133,16 +136,18 @@
   height: 10px;
   border-radius: 50%;
   background-color: black;
-  border: 1px solid white;
+  border: 1px solid transparent;
   position: absolute;
   top: calc(50% - 5px);
-  z-index: 1;
+  z-index: 10;
 }
 
 .orbit-circle {
   border: 1px solid rgba(255,255,255,0.2);
   position: absolute;
   border-radius: 50%;
+  z-index: 1;
+  opacity: 0.2;
 }
 
 .planet-orbit-name-container {
@@ -163,16 +168,372 @@
   position: absolute;
   top: 40px;
   left: 110px;
-  font-size: 12px;
-  font-family: "Open Sans";
-  width: 140px;
+  font-size: 13px;
+  font-family: "Circular-Medium";
+  width: 180px;
   color: rgba(255,255,255,0.8);
 }
 
+
+
+
+
+
+
+
+
+
+.planet-temperature-01 {
+  font-size: 12px;
+  font-family: "Circular-Book";
+  color: #47D6B6;
+}
+
+.planet-temperature-02 {
+  font-size: 12px;
+  font-family: "Circular-Book";
+  color: #17B3C1;
+}
+
+.planet-temperature-03 {
+  font-size: 12px;
+  font-family: "Circular-Book";
+  color: #BFF8D4;
+}
+
+.planet-temperature-04 {
+  font-size: 12px;
+  font-family: "Circular-Book";
+  color: #B9E937;
+}
+
+.planet-temperature-05 {
+  font-size: 12px;
+  font-family: "Circular-Book";
+  color: #FF5733;
+}
+
+.planet-temperature-06 {
+  font-size: 12px;
+  font-family: "Circular-Book";
+  color: #C70039;
+}
+
+
+.presence-of-liquid-water {
+  font-size: 11px;
+  font-family: "Circular-Book";
+  color: #17B3C1;
+  margin-right: 8px;
+}
+
+.presence-of-life {
+  font-size: 11px;
+  font-family: "Circular-Book";
+  color: #B9E937;
+  margin-right: 8px;
+}
+
+.presence-of-atmosphere {
+  font-size: 11px;
+  font-family: "Circular-Book";
+  color: #17B3C1;
+  margin-right: 8px;
+}
+
+
+.flex-dispo {
+  display: flex;
+  align-items: center;
+  width: 300px;
+}
+
+
+
+
+
+
+
+
+
+.solar-class-category-container {
+  display: flex;
+  align-items: flex-start;
+}
+
+.solar-class-title {
+  font-size: 13px;
+  font-family: "Circular-Book";
+}
+
+.solar-class1 {
+  color: rgba(255,255,255,0.3);
+  font-family: "Circular-Black";
+}
+
+.sun-small-text {
+  font-size: 11px;
+  font-family: "Circular-Book";
+  color: rgba(255,255,255,0.7);
+  margin-right: 8px;
+}
+
+
+
+
+
+
+.fa-tint {
+  color: #17B3C1;
+}
+
+.fa-pagelines {
+  color: #B9E937;
+}
+
+.fa-cloud {
+  color: #17B3C1;
+  font-size: 10px;
+  padding-bottom: 2px;
+}
+
+
+.rotation-time {
+  font-size: 11px;
+  font-family: "Circular-Book";
+  color: #52D681;
+  margin-right: 8px;
+}
+
+.rotation-time-small {
+  font-size: 10px;
+  font-family: "Circular-Book";
+  color: #52D681;
+  margin-left: 8px;
+}
+
+.fa-adjust {
+  color: #52D681;
+}
+
+
+.recap-planet-name {
+  font-size: 15px;
+  font-family: "Circular-Bold";
+}
+
+.recap-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  border-top: 2px solid rgba(255,255,255,0.4);
+  padding-top: 10px;
+}
+
+.rotation-title {
+  font-size: 11px;
+  font-family: "Circular-Medium";
+  margin-right: 9px;
+}
+
+
+.icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+}
+
+.margins-on-top {
+  margin-top: 20px;
+}
+
+
+
+
+
+
+.dynamic-planet-type-super-jupiter {
+  font-size: 11px;
+  font-family: "Circular-Book";
+  color: #F73F52;
+}
+
+.dynamic-planet-type-hot {
+  font-size: 11px;
+  font-family: "Circular-Book";
+  color: #C70039;
+}
+
+.dynamic-planet-type-cold {
+  font-size: 11px;
+  font-family: "Circular-Book";
+  color: #47D6B6;
+}
+
+.dynamic-planet-type-good {
+  font-size: 11px;
+  font-family: "Circular-Book";
+  color: #B9E937;
+}
+
+.dynamic-planet-type-anomaly {
+  font-size: 11px;
+  font-family: "Circular-Book";
+  color: #F73F52;
+}
+
+.dynamic-planet-type-helium {
+  font-size: 11px;
+  font-family: "Circular-Book";
+  color: #17B3C1;
+}
+
+
+
+.great-header {
+  width: 100%;
+  height: 26px;
+  border-bottom: 1px solid rgba(255,255,255,0.4);
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 12px;
+}
+
+.small-header-text {
+  font-size: 11px;
+  font-family: "Circular-Book";
+  color: #B9E937;
+}
+
+
+
+.verybig-name {
+  font-size: 16px;
+}
+
+
+
+
+.small-solar-color-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+
+.new-height {
+  height: 25px;
+}
+
+
+
+
+
+.dynamic-planet-type-super-jupiter2 {
+  font-size: 11px;
+  font-family: "Circular-Medium";
+  color: #F73F52;
+}
+
+.dynamic-planet-type-hot2 {
+  font-size: 11px;
+  font-family: "Circular-Medium";
+  color: #C70039;
+}
+
+.dynamic-planet-type-cold2 {
+  font-size: 11px;
+  font-family: "Circular-Medium";
+  color: #47D6B6;
+}
+
+.dynamic-planet-type-good2 {
+  font-size: 11px;
+  font-family: "Circular-Medium";
+  color: #B9E937;
+}
+
+.dynamic-planet-type-anomaly2 {
+  font-size: 11px;
+  font-family: "Circular-Medium";
+  color: #F73F52;
+}
+
+.dynamic-planet-type-helium2 {
+  font-size: 11px;
+  font-family: "Circular-Medium";
+  color: #17B3C1;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.fa-exclamation {
+  color: #F73F52;
+  margin-left: 8px;
+}
+
+
+
+
+
+
+
+.earth-times01 {
+  font-size: 10px;
+  font-family: "Circular-Book";
+  padding-top: 2px;
+  margin-left: 8px;
+  color: #B9E937;
+}
+
+.earth-times02 {
+  font-size: 10px;
+  font-family: "Circular-Book";
+  padding-top: 2px;
+  margin-left: 8px;
+  color: #FF5733;
+}
+
+.earth-times03 {
+  font-size: 10px;
+  font-family: "Circular-Book";
+  padding-top: 2px;
+  margin-left: 8px;
+  color: #F73F52;
+}
+
+
+
+
+
+
 .dynamic-planet-infos {
-  font-size: 8px;
-  font-family: "Open Sans";
-  color: rgba(255,255,255,0.8);
+  font-size: 10px;
+  font-family: "Circular-Book";
+  font-weight: 300;
+  color: rgba(255,255,255,0.5);
 }
 
 .name-line {
@@ -197,19 +558,26 @@
 
 
 .left-menu-header {
-  height: 160px;
+  height: 100%;
   width: 100%;
-  background-color: rgba(25,25,25,0.9);
+  background-color: transparent;
   color: rgba(255,255,255,0.7);
   padding: 20px;
-  display: flex;
   flex-direction: column;
 }
 
 
 .sun-name {
   font-size: 20px;
-  font-family: "Open Sans";
+  font-family: "Circular-Bold";
+  font-weight: 100;
+  color: rgba(255,255,255,0.8);
+  margin-left: 5px;
+}
+
+.sun-name-title {
+  font-size: 16px;
+  font-family: "Circular-Book";
   font-weight: 100;
   color: rgba(255,255,255,0.8);
 }
@@ -222,11 +590,187 @@
 }
 
 
+.menu-header-container {
+  margin-bottom: 10px;
+}
+
+
+
+.dim-trigger {
+  position: absolute;
+  right: 50px;
+  top: 50px;
+  z-index: 400;
+  font-size: 15px;
+  font-family: "Circular-Book";
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+}
+
+.hidden-infos-trigger {
+  position: absolute;
+  right: 50px;
+  top: 80px;
+  z-index: 400;
+  font-size: 15px;
+  font-family: "Circular-Book";
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+}
 
 
 
 
 
+.revo-color {
+  color: #F7E74A;
+}
+
+.icon-ios-snowy {
+  font-size: 20px;
+  color: #17B3C1;
+  padding-top: 6px;
+  margin-left: 4px;
+}
 
 
+
+.new-link-to-planet {
+  font-size: 12px;
+  font-family: "Circular-Bold";
+  color: rgba(255,255,255,0.8);
+  margin-right: 6px;
+}
+
+.go-to-link {
+  font-size: 12px;
+  font-family: "Circular-Book";
+  color: rgba(255,255,255,0.8);
+  margin-right: 6px;
+}
+
+.planet-real-button {
+  border: 1px solid rgba(255,255,255,0.5);
+  display: flex;
+  border-radius: 2px;
+  align-items: center;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  margin-top: 20px;
+}
+
+
+.moon-body-planet-center {
+  position: absolute;
+  background-color: transparent;
+  border-radius: 50%;
+}
+
+
+.moon-body-planet-center-relative {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: transparent;
+}
+
+.moon-body {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: #5588A3;
+  opacity: 0.6;
+}
+
+
+.moon-orbit-circle {
+  border-radius: 50%;
+  position: absolute;
+  border: 1px solid #5588A3;
+  z-index: 1000;
+  opacity: 0.6;
+}
+
+
+.large-orbit-count1 {
+  color: #B9E937;
+  transition: 7s ease;
+}
+
+.large-orbit-count2 {
+  color: #FF5733;
+  transition: 7s ease;
+}
+
+.large-orbit-count3 {
+  color: #F73F52;
+  transition: 7s ease;
+}
+
+
+.winter {
+  font-size: 11px;
+  font-family: "Circular-Book";
+  color: #17B3C1;
+}
+
+.summer {
+  font-size: 11px;
+  font-family: "Circular-Book";
+  color: #FF5733;
+}
+
+.dyn-temp-text {
+  font-size: 11px;
+  font-family: "Circular-Book";
+}
+
+.path-and-orbit {
+  margin-right: 7px;
+  font-size: 11px;
+  font-family: "Circular-Book";
+  font-weight: 100;
+  color: #17B3C1;
+}
+
+.numbers-dynamic {
+  font-size: 12px;
+  font-family: "Circular-Book";
+  font-weight: 100;
+  letter-spacing: 1px;
+  color: #17B3C1;
+  margin-right: 5px;
+}
+
+.numbers-dynamic2 {
+  font-size: 12px;
+  font-family: "Circular-Book";
+  font-weight: 100;
+  letter-spacing: 1px;
+  margin-right: 5px;
+}
+
+.dyn-current-temp {
+  font-size: 12px;
+  font-family: "Circular-Book";
+  font-weight: 100;
+  letter-spacing: 1px;
+  margin-right: 5px;
+}
+
+.current-temp-title {
+  margin-right: 7px;
+  font-size: 11px;
+  font-family: "Circular-Book";
+}
+
+.average-temp-title {
+  margin-right: 7px;
+  font-size: 11px;
+  font-family: "Circular-Book";
+}
 

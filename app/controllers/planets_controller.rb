@@ -34,7 +34,10 @@ class PlanetsController < ApplicationController
                                    :atmosphere,
                                    :water,
                                    :liquid_water,
+                                   :moon_number,
+                                   :rotation_period,
                                    :life,
+                                   :planet_color,
                                    :temperature)
   end
 

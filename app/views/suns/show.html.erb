@@ -1,74 +1,403 @@
-<%= @sun.name %>
-
-<% @sun.planets.each do |planet| %>
-  <div class="planet-name-big"><%= planet.name.capitalize %></div>
-
-  <div class="planet-infos-container">
-
-
-    <div class="planet-info-small"><%= "Radius : #{planet_radius_in_km(planet.radius)} Km (#{radius_in_earth(planet_radius_in_km(planet.radius))} x earth)" %></div>
-    <div class="planet-info-small"><%= "Mass : #{planet_mass_in_kg(planet.mass)} Kg (#{mass_in_earth(planet_mass_in_kg(planet.mass))} x earth)" %></div>
-    <div class="planet-info-small"><%= "Gravity : #{planet.gravity} m/s (#{gravity_in_g(planet.gravity)}g)" %></div>
-    <div class="planet-info-small"><%= "Temperature : #{planet.temperature} Degres C°" %></div>
-    <div class="planet-info-small"><%= "Orbital period : #{planet.orbital_period} Days (#{revolution_in_years(planet.orbital_period)} Years)" %></div>
-    <div class="planet-info-small"><%= "Orbital speed : #{speed_in_kms(planet.orbital_speed)} Km/s" %></div>
-    <div class="planet-info-small"><%= "Distance from the sun : #{planet.solar_distance} UA (#{planet.solar_distance.round(3)} x earth)" %></div>
-    <div class="planet-info-small"><%= "Planet type : #{planet.planet_type}" %></div>
-    <div class="planet-info-small"><%= "Atmosphere : #{planet.atmosphere}" %></div>
-    <div class="planet-info-small"><%= "Water : #{planet.water}" %></div>
-    <div class="planet-info-small"><%= "Liquid water : #{planet.liquid_water}" %></div>
-    <div class="planet-info-small"><%= "Life : #{planet.life}" %></div>
-
-    <div class="planet-picture planet-animation" style="animation-duration: <%= planet.orbital_speed/10000 %>s">
-
-      <div class="carret"></div>
-
-    </div>
-
-  </div>
-  <%= link_to "#{planet.name}", galaxy_sun_planet_path(@galaxy, @sun, planet) %>
-<% end %>
-
 
 
 <div class="dim-container">
+
+  <div class="dim-trigger">Small view</div>
+  <div class="hidden-infos-trigger">Hide infos</div>
+
   <div class="system-left-menu">
     <div class="left-menu-header">
-      <div class="sun-name"><%= "Sun : #{@sun.name}" %></div>
-      <div class="sun-planet-count"><%= "Solar class : #{@sun.solar_class}" %></div>
-      <div class="sun-planet-count"><%= "Solar type : #{@sun.solar_type}" %></div>
-      <div class="sun-planet-count"><%= "Chromaticity : #{@sun.chromaticity}" %></div>
-      <div class="sun-planet-count"><%= "Planets : #{@sun.planets.count}" %></div>
-      <div class="dim-trigger">small view</div>
+      <div class="menu-header-container">
+        <div class="flex-dispo">
+          <div class="sun-name-title">System : </div>
+          <div class="sun-name"><%= "#{@sun.name}" %></div>
+        </div>
+      </div>
+
+      <div class="flex-dispo new-height">
+        <div class="sun-small-text">Class:</div>
+        <div class="solar-class1" style="font-size: 14px;color: <%= @sun.solar_color %>;"><%= "#{@sun.solar_class}" %></div>
+      </div>
+
+      <div class="flex-dispo new-height">
+        <div class="sun-small-text">Type:</div>
+        <div class="solar-class1" style="font-size: 14px;color: <%= @sun.solar_color %>;"><%= "#{@sun.solar_type}" %></div>
+      </div>
+
+      <div class="flex-dispo new-height">
+        <div class="sun-small-text">Chromaticity:</div>
+        <div class="small-solar-color-dot" style="background-color: <%= @sun.solar_color %>;"></div>
+      </div>
+
+      <div class="sun-small-text" style="font-size: 15px;"><%= "#{@sun.planets.count} Planets" %></div>
+
+
+
+
+      <% @sun.planets.each do |planet| %>
+        <div class="recap-container">
+          <div class="recap-planet-name"><%= planet.name.capitalize %></div>
+          <% if planet.planet_type == "Super-Jupiter" %>
+                    <div class="dynamic-planet-type-super-jupiter2"><%= "#{planet.planet_type.capitalize} Planet" %></div>
+                  <% elsif planet.planet_type == "Metallic" or planet.planet_type == "Lava" or planet.planet_type == "Hot-Jupiter" or planet.planet_type == "Hot-Neptune" %>
+                    <div class="dynamic-planet-type-hot2"><%= "#{planet.planet_type.capitalize} Planet" %></div>
+                  <% elsif planet.planet_type == "Cold-Neptune" or planet.planet_type == "Cold-jupiter" or planet.planet_type == "Coreless" %>
+                    <div class="dynamic-planet-type-cold2"><%= "#{planet.planet_type.capitalize} Planet" %></div>
+                  <% elsif planet.planet_type == "Silicate" or planet.planet_type == "Carbon" or planet.planet_type == "Ocean" or planet.planet_type == "Excentric" %>
+                    <div class="dynamic-planet-type-good2"><%= "#{planet.planet_type.capitalize} Planet" %></div>
+                  <% elsif planet.planet_type == "Helium" %>
+                    <div class="dynamic-planet-type-helium2"><%= "#{planet.planet_type.capitalize} Planet" %></div>
+                  <% elsif planet.planet_type == "Mini-Neptune" or planet.planet_type == "Anomaly - Gigantic planet" or planet.planet_type == "Anomaly - Very distant planet" %>
+                    <div class="flex-dispo">
+                      <div class="dynamic-planet-type-anomaly2"><%= "#{planet.planet_type.capitalize}" %></div>
+                      <i class="fa fa-exclamation" aria-hidden="true" style="font-size: 8px;"></i>
+                    </div>
+          <% end %>
+          <div class="flex-dispo margins-on-top">
+            <div class="rotation-title" style="color: <%= planet.planet_color %>;">Orbital period</div>
+            <div class="fa fa-adjust planet-animation" style="color: <%= planet.planet_color %>;font-size: 13px;animation-duration: <%= planet.orbital_period/150 %>s;"></div>
+            <div class="rotation-time-small" style="color: <%= planet.planet_color %>;"><%= "#{planet.orbital_period} Days (#{revolution_in_years(planet.orbital_period)} Years)" %></div>
+          </div>
+          <div class="flex-dispo margins-on-top">
+            <div class="planet-real-button">
+              <div class="go-to-link">Go to </div>
+              <%= link_to "#{planet.name.capitalize}", galaxy_sun_planet_path(@galaxy, @sun, planet), class: "new-link-to-planet" %>
+              <i class="fa fa-rocket" aria-hidden="true"></i>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
     </div>
   </div>
 <div class="system-with-sun-and-planets">
 
 
 
-  <div class="sun-system" style="width: 50px;height: 50px;left: calc(50% - 50px/2);top: calc(50% - 50px/2)"></div>
+  <div class="sun-system" style="width: 50px;height: 50px;left: calc(50% - 50px/2);top: calc(50% - 50px/2);background-color: <%= @sun.solar_color %>;box-shadow: 0px 0px 120px 20px <%= @sun.solar_color %>;"></div>
+
+
+
+
+
+
+
+
   <% @sun.planets.each do |planet| %>
+
+    <% content_for :dynrotate do %>
+    <script>
+      function roundToTwo(num) {
+        return +(Math.round(num + "e+1")  + "e-1");
+      }
+      var Timer<%= planet.id %> = 0;
+      var Time<%= planet.id %> = <%= (planet.orbital_period/12)*1000 %>;
+      var Temperature<%= planet.id %> = <%= planet.temperature %>;
+      var Orbit<%= planet.id %> = 0;
+      window.setInterval(function(){
+        var Intimer<%= planet.id %> = Timer<%= planet.id %> += 100;
+        var Percent<%= planet.id %> = (Intimer<%= planet.id %> * 100) / Time<%= planet.id %>;
+        var Text<%= planet.id %> = roundToTwo(Percent<%= planet.id %>);
+        $(".revpercdyn<%= planet.id %>").text(Text<%= planet.id %>);
+        // if (Percent<%= planet.id %> >= 100.00) {
+        //   var Intimer<%= planet.id %> = Timer<%= planet.id %> = 0;
+        // }
+        // if (Percent<%= planet.id %> >= 100.00) {
+        //   Orbit<%= planet.id %> += 1;
+        //   $(".orbitcount<%= planet.id %>").text("Orbit: " + Orbit<%= planet.id %>);
+        // }
+      }, 100);
+        setInterval(function(){
+          var Intimer<%= planet.id %> = Timer<%= planet.id %> = 0;
+        }, Time<%= planet.id %>);
+        setInterval(function(){
+          Orbit<%= planet.id %> += 1;
+          $(".orbitcount<%= planet.id %>").text(Orbit<%= planet.id %>);
+        }, Time<%= planet.id %>);
+        setInterval(function(){
+           if (Orbit<%= planet.id %> >= 5) {
+            $(".orbitcount<%= planet.id %>").addClass("large-orbit-count1");
+          }
+        }, 1000);
+        setInterval(function(){
+           if (Orbit<%= planet.id %> >= 10) {
+            $(".orbitcount<%= planet.id %>").addClass("large-orbit-count2");
+          }
+        }, 1000);
+        setInterval(function(){
+           if (Orbit<%= planet.id %> >= 20) {
+            $(".orbitcount<%= planet.id %>").addClass("large-orbit-count3");
+          }
+        }, 1000);
+
+
+
+
+        setInterval(function(){
+          var Currentpercent<%= planet.id %> = $( ".revpercdyn<%= planet.id %>" ).text();
+          console.log(Currentpercent<%= planet.id %>)
+          if (Currentpercent<%= planet.id %> > 50) {
+
+            var Newtempneg<%= planet.id %> = Temperature<%= planet.id %> += 0.42;
+            var Dyntempneg<%= planet.id %> = Newtempneg<%= planet.id %> += 0.42;
+            var Dynroundneg<%= planet.id %> = (roundToTwo(Dyntempneg<%= planet.id %>));
+            $(".dynamictemp<%= planet.id %>").text(Dynroundneg<%= planet.id %>);
+            $(".season-type<%= planet.id %>").text("Summer");
+            $(".season-type<%= planet.id %>").removeClass("winter");
+            $(".season-type<%= planet.id %>").addClass("summer");
+            $(".dynamictemp<%= planet.id %>").addClass("dyn-temp-text");
+
+        } else {
+
+            var Newtemppos<%= planet.id %> = Temperature<%= planet.id %> += -0.42;
+            var Dyntemppos<%= planet.id %> = Newtemppos<%= planet.id %> += -0.42;
+            var Dynroundpos<%= planet.id %> = (roundToTwo(Dyntemppos<%= planet.id %>));
+            $(".dynamictemp<%= planet.id %>").text(Dynroundpos<%= planet.id %>);
+            $(".season-type<%= planet.id %>").text("Winter");
+            $(".season-type<%= planet.id %>").removeClass("summer");
+            $(".season-type<%= planet.id %>").addClass("winter");
+            $(".dynamictemp<%= planet.id %>").addClass("dyn-temp-text");
+
+        }
+        }, 300);
+
+
+
+
+
+
+
+
+    </script>
+
+
+    <% end %>
+
     <div class="planet-center" style="width: 50px;height: 50px;left: calc(50% - 50px/2);top: calc(50% - 50px/2)">
       <div class="planet-center-test planet-animation" style="animation-duration: <%= planet.orbital_period/12 %>s;">
-        <div class="planet-orbit planet-animation-reverse" style="right: -<%= planet.solar_distance * 40 %>px;width: <%= planet.radius.to_i * 2 %>px;height: <%= planet.radius.to_i * 2 %>px;top: calc(50% - (<%= planet.radius.to_i / 2 %>px));animation-duration: <%= planet.orbital_period/12 %>s;">
+        <div class="planet-orbit planet-animation-reverse" style="background-color: <%= planet.planet_color %>;right: -<%= planet.solar_distance * 40 %>px;width: <%= planet.radius.to_i * 2 %>px;height: <%= planet.radius.to_i * 2 %>px;top: calc(50% - (<%= planet.radius.to_i / 2 %>px));animation-duration: <%= planet.orbital_period/12 %>s;">
           <div class="planet-orbit-name-container">
 
             <div class="name-line" style="top: <%= (planet.radius.to_i * 2)+8 %>px;left: <%= (planet.radius.to_i)+8 %>px;">
               <div class="name-line-rel-cont">
                 <div class="dynamic-planet-name2">
-                  <%= planet.name.capitalize %>
-                  <div class="dynamic-planet-infos"><%= "Radius : #{planet_radius_in_km(planet.radius)} Km" %></div>
-                  <div class="dynamic-planet-infos"><%= "Mass : #{planet_mass_in_kg(planet.mass)} Kg" %></div>
-                  <div class="dynamic-planet-infos"><%= "Solar distance : #{planet.solar_distance} UA" %></div>
+                  <div class="flex-dispo">
+                    <div class="verybig-name"><%= planet.name.capitalize %></div>
+
+
+                  </div>
+                  <% if planet.planet_type == "Super-Jupiter" %>
+                    <div class="dynamic-planet-type-super-jupiter"><%= "#{planet.planet_type.capitalize} Planet" %></div>
+                  <% elsif planet.planet_type == "Metallic" or planet.planet_type == "Lava" or planet.planet_type == "Hot-Jupiter" or planet.planet_type == "Hot-Neptune" %>
+                    <div class="dynamic-planet-type-hot"><%= "#{planet.planet_type.capitalize} Planet" %></div>
+                  <% elsif planet.planet_type == "Cold-Neptune" or planet.planet_type == "Cold-jupiter" or planet.planet_type == "Coreless" %>
+                    <div class="dynamic-planet-type-cold"><%= "#{planet.planet_type.capitalize} Planet" %></div>
+                  <% elsif planet.planet_type == "Silicate" or planet.planet_type == "Carbon" or planet.planet_type == "Ocean" or planet.planet_type == "Excentric" %>
+                    <div class="dynamic-planet-type-good"><%= "#{planet.planet_type.capitalize} Planet" %></div>
+                  <% elsif planet.planet_type == "Helium" %>
+                    <div class="dynamic-planet-type-helium"><%= "#{planet.planet_type.capitalize} Planet" %></div>
+                  <% elsif planet.planet_type == "Mini-Neptune" or planet.planet_type == "Anomaly - Gigantic planet" or planet.planet_type == "Anomaly - Very distant planet" %>
+                    <div class="flex-dispo">
+                      <div class="dynamic-planet-type-anomaly"><%= "#{planet.planet_type.capitalize}" %></div>
+                      <i class="fa fa-exclamation" aria-hidden="true"></i>
+                    </div>
+                  <% end %>
+
+
+                  <div class="great-header">
+                    <div class="small-header-text">Orbital infos</div>
+                  </div>
+
+
+                  <div class="flex-dispo">
+                      <div class="rotation-time revo-color">Revolution</div>
+                      <i class="fa fa-adjust planet-animation revo-color" aria-hidden="true" style="animation-duration: <%= planet.orbital_period/150 %>s;"></i>
+                      <div class="rotation-time-small revo-color"><%= "#{planet.orbital_period} Days (#{revolution_in_years(planet.orbital_period)} Years)" %></div>
+                  </div>
+
+
+                  <div class="flex-dispo">
+                      <div class="rotation-time">Rotation</div>
+                      <i class="fa fa-adjust planet-animation" aria-hidden="true" style="animation-duration: <%= planet.rotation_period/3 %>s;"></i>
+                      <div class="rotation-time-small"><%= "#{(rotation_in_hours(planet.rotation_period)).round(1)} Hours (#{(rotation_in_days(rotation_in_hours(planet.rotation_period))).round(1)} Days)" %></div>
+                  </div>
+
+                  <div class="flex-dispo">
+                      <div class="path-and-orbit">Path: </div>
+                      <div class="revpercdyn<%= planet.id %> numbers-dynamic" style="min-width: 10px;"></div>
+                      <div class="numbers-dynamic">%</div>
+                  </div>
+                  <div class="flex-dispo">
+                      <div class="path-and-orbit">Orbits: </div>
+                      <div class="orbitcount<%= planet.id %> numbers-dynamic" style="min-width: 10px;">0</div>
+                  </div>
+
+
+
+
+
+                  <div class="great-header">
+                    <div class="small-header-text">Characteristics</div>
+                  </div>
+
+
+
+
+
+
+                  <div class="flex-dispo">
+                      <div class="current-temp-title">Current temp :</div>
+                      <div class="dynamictemp<%= planet.id %> dyn-current-temp"></div>
+                      <div class="numbers-dynamic2">C°</div>
+                  </div>
+
+                  <% if planet.temperature > -40 and planet.temperature < -20 %>
+                    <div class="flex-dispo">
+                      <div class="average-temp-title">Average temp :</div>
+                      <div class="planet-temperature-02 dyn-current-temp"><%= "#{planet.temperature} C°" %></div>
+                    </div>
+                  <% elsif planet.temperature < -40 %>
+                    <div class="flex-dispo">
+                      <div class="average-temp-title">Average temp :</div>
+                      <div class="planet-temperature-01 dyn-current-temp"><%= "#{planet.temperature} C°" %></div>
+                    </div>
+                  <% elsif planet.temperature > -20 and planet.temperature < 0 %>
+                    <div class="flex-dispo">
+                      <div class="average-temp-title">Average temp :</div>
+                      <div class="planet-temperature-03 dyn-current-temp"><%= "#{planet.temperature} C°" %></div>
+                    </div>
+                  <% elsif planet.temperature > 0 and planet.temperature < 20 %>
+                    <div class="flex-dispo">
+                      <div class="average-temp-title">Average temp :</div>
+                      <div class="planet-temperature-04 dyn-current-temp"><%= "#{planet.temperature} C°" %></div>
+                    </div>
+                  <% elsif planet.temperature > 20 and planet.temperature < 40 %>
+                    <div class="flex-dispo">
+                      <div class="average-temp-title">Average temp :</div>
+                      <div class="planet-temperature-05 dyn-current-temp"><%= "#{planet.temperature} C°" %></div>
+                    </div>
+                  <% elsif planet.temperature > 40 %>
+                    <div class="flex-dispo">
+                      <div class="average-temp-title">Average temp :</div>
+                      <div class="planet-temperature-06 dyn-current-temp"><%= "#{planet.temperature} C°" %></div>
+                    </div>
+                  <% end %>
+
+                  <div class="flex-dispo">
+                      <div class="average-temp-title">Season :</div>
+                      <div class="season-type<%= planet.id %>"></div>
+                  </div>
+
+                  <div class="flex-dispo">
+                      <div class="average-temp-title">Radius :</div>
+                      <div class="dyn-current-temp"><%= "#{planet_radius_in_km(planet.radius)}" %></div>
+                      <div class="numbers-dynamic2">Km</div>
+                      <% if planet.radius > 0 and planet.radius < 5 %>
+                      <div class="earth-times01"><%= "#{(radius_in_earth(planet_radius_in_km(planet.radius))).round(2)} X Earth" %></div>
+                    <% elsif planet.radius > 5 and planet.radius < 10 %>
+                      <div class="earth-times02"><%= "#{(radius_in_earth(planet_radius_in_km(planet.radius))).round(2)} X Earth" %></div>
+                    <% elsif planet.radius > 10 %>
+                      <div class="earth-times03"><%= "#{(radius_in_earth(planet_radius_in_km(planet.radius))).round(2)} X Earth" %></div>
+                    <% end %>
+                  </div>
+
+                  <div class="flex-dispo">
+                      <div class="average-temp-title">Mass :</div>
+                      <div class="dyn-current-temp"><%= "#{planet_mass_in_kg(planet.mass)}" %></div>
+                      <div class="numbers-dynamic2">Kg</div>
+                  </div>
+
+                  <div class="flex-dispo">
+                      <div class="average-temp-title">Solar distance :</div>
+                      <div class="dyn-current-temp"><%= "#{planet.solar_distance}" %></div>
+                      <div class="numbers-dynamic2">Ua</div>
+                  </div>
+
+
+
+                  <div class="great-header">
+                    <div class="small-header-text">Rare resources</div>
+                  </div>
+
+
+
+                  <% if planet.atmosphere == true %>
+                    <div class="flex-dispo">
+                      <div class="presence-of-atmosphere">Atmosphere</div>
+                      <i class="fa fa-cloud" aria-hidden="true"></i>
+                    </div>
+                  <% end %>
+
+
+
+
+                  <% if planet.liquid_water == true %>
+                    <div class="flex-dispo">
+                      <div class="presence-of-liquid-water">Liquid water</div>
+                      <i class="fa fa-tint" aria-hidden="true"></i>
+                    </div>
+                  <% else %>
+                  <% end %>
+                  <% if planet.life == true %>
+                    <div class="flex-dispo">
+                      <div class="presence-of-life">Life</div>
+                      <i class="fa fa-pagelines" aria-hidden="true"></i>
+                    </div>
+                  <% else %>
+                  <% end %>
                 </div>
               </div>
             </div>
+
+
+              <% planet.moons.each do |moon| %>
+              <div class="moon-body-planet-center" style="width: <%= planet.radius.to_i*2 %>px;height: <%= planet.radius.to_i*2 %>px;">
+                <div class="moon-body-planet-center-relative planet-animation" style="animation-duration: <%= moon.orbital_period/10 %>s;">
+
+
+                  <div class="moon-body" style="right: <%= moon.distance_from_planet.to_i + (planet.radius.to_i/2)  %>px;"></div>
+                  <div class="moon-orbit-circle" style="width: <%= ((moon.distance_from_planet.to_i)*2)+2 %>px;height: <%= ((moon.distance_from_planet.to_i)*2)+2 %>px;left: -<%= (moon.distance_from_planet.to_i)- planet.radius.to_i + 1 %>px;top: -<%= (moon.distance_from_planet.to_i)- planet.radius.to_i + 1 %>px;"></div>
+
+
+                </div>
+              </div>
+              <% end %>
+
           </div>
         </div>
-        <div class="orbit-circle" style="width: <%= ((planet.solar_distance*2) * 40)+50-(planet.radius.to_i*2) %>px;height: <%= ((planet.solar_distance*2) * 40)+50-(planet.radius.to_i*2) %>px;top: calc(50% - <%= ((planet.solar_distance) * 40)+25-(planet.radius.to_i*1) %>px );right: calc(50% - <%= ((planet.solar_distance) * 40)+25-(planet.radius.to_i*1) %>px);"></div>
+        <div class="orbit-circle" style="width: <%= ((planet.solar_distance*2) * 40)+50-(planet.radius.to_i*2) %>px;height: <%= ((planet.solar_distance*2) * 40)+50-(planet.radius.to_i*2) %>px;top: calc(50% - <%= ((planet.solar_distance) * 40)+25-(planet.radius.to_i*1) %>px );right: calc(50% - <%= ((planet.solar_distance) * 40)+25-(planet.radius.to_i*1) %>px);border-color: <%= planet.planet_color %>;"></div>
       </div>
     </div>
   <% end %>
 
 </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

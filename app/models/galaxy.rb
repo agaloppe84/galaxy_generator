@@ -254,7 +254,7 @@ end
 
 
 
-def balanced_radius(planet_radius, planet_mass)
+def balanced_radius(planet_radius, planet_mass, planet_distance)
   if planet_mass - planet_radius > 2 and planet_radius < 2
     random_balanced = rand(0.50..2.50)
     coef = planet_mass / (planet_radius + random_balanced)
@@ -269,6 +269,9 @@ def balanced_radius(planet_radius, planet_mass)
     random_balanced = rand(4.00..10.50)
     coef = planet_mass / (planet_radius + random_balanced)
     balanced_radius = planet_radius * coef
+    balanced_radius
+  elsif planet_distance < 7 and planet_radius > 14
+    balanced_radius = planet_radius / 14
     balanced_radius
   else
     planet_radius
@@ -388,7 +391,8 @@ def atmosphere(planet)
   elsif planet == "Anomaly - Very distant planet"
     false
   else
-    true
+    random_atmo_presence = [true, false, true, false, true, false, true, false, false, false].sample
+    random_atmo_presence
   end
 end
 
@@ -414,7 +418,21 @@ def planet_type(planet_distance , planet_radius)
   end
 end
 
-
+def planet_color(planet_type)
+   if planet_type == "Super-Jupiter"
+    "#F73F52"
+   elsif planet_type == "Metallic" or planet_type == "Lava" or planet_type == "Hot-Jupiter" or planet_type == "Hot-Neptune"
+    "#C70039"
+   elsif planet_type == "Cold-Neptune" or planet_type == "Cold-jupiter" or planet_type == "Coreless"
+    "#47D6B6"
+   elsif planet_type == "Silicate" or planet_type == "Carbon" or planet_type == "Ocean" or planet_type == "Excentric"
+    "#B9E937"
+   elsif planet_type == "Helium"
+    "#17B3C1"
+   elsif planet_type == "Mini-Neptune" or planet_type == "Anomaly - Gigantic planet" or planet_type == "Anomaly - Very distant planet"
+    "#F73F52"
+   end
+end
 
 
 
@@ -509,6 +527,56 @@ end
 
 
 
+def range_sm_dist
+  range1 = (0.010..1.000)
+  range1_rand = rand(range1).round(6)
+  range2 = (1.000..2.000)
+  range2_rand = rand(range2).round(6)
+  range3 = (2.000..3.000)
+  range3_rand = rand(range3).round(6)
+  range4 = (3.000..4.000)
+  range4_rand = rand(range4).round(6)
+  ranges_array = [range1_rand, range2_rand, range3_rand, range4_rand]
+  ranges_array_rand = ranges_array.sample
+end
+
+
+def range_sm_2_dist
+  [range_sm_dist, range_sm_dist, range_sm_dist, range_sm_dist, range_sm_dist, range_sm_dist].sample
+end
+
+
+def range_md_dist
+  range1 = (4.000..5.000)
+  range1_rand = rand(range1).round(6)
+  range2 = (5.000..6.000)
+  range2_rand = rand(range2).round(6)
+  range3 = (6.000..8.000)
+  range3_rand = rand(range3).round(6)
+  range4 = (8.000..18.000)
+  range4_rand = rand(range4).round(6)
+  ranges_array = [range1_rand, range2_rand, range3_rand, range4_rand]
+  ranges_array_rand = ranges_array.sample
+end
+
+def range_anomaly_dist
+  range = (20.000..250.000)
+  range_random = rand(range).round(6)
+end
+
+def range_md_2_dist
+  [range_md_dist, range_md_dist, range_md_dist, range_md_dist, range_md_dist, range_md_dist].sample
+end
+
+
+def fullrange_dist
+  r1 = [range_sm_2_dist, range_md_2_dist, range_sm_2_dist, range_md_2_dist, range_sm_2_dist, range_md_2_dist].sample
+  r2 = [range_sm_2_dist, range_md_2_dist, range_sm_2_dist, range_md_2_dist, range_sm_2_dist, range_md_2_dist].sample
+  r3 = [range_sm_2_dist, range_md_2_dist, range_sm_2_dist, range_md_2_dist, range_sm_2_dist, range_md_2_dist].sample
+  r4 = [range_sm_2_dist, range_md_2_dist, range_sm_2_dist, range_md_2_dist, range_sm_2_dist, range_md_2_dist, range_anomaly_dist].sample
+  r5 = [range_sm_2_dist, range_md_2_dist, range_sm_2_dist, range_md_2_dist, range_sm_2_dist, range_md_2_dist].sample
+  rfull1 = [r1, r2, r3, r4, r5].sample
+end
 
 
 
@@ -524,6 +592,65 @@ end
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def solar_color(chromaticity)
+  if chromaticity == "King blue"
+    "#006C9A"
+  elsif chromaticity == "Sky blue"
+    "#00BEBE"
+  elsif chromaticity == "Pale blue"
+    "#72E8E1"
+  elsif chromaticity == "White"
+    "#E3F8FF"
+  elsif chromaticity == "Cream"
+    "#F2EAD3"
+  elsif chromaticity == "Blond"
+    "#FFEE82"
+  elsif chromaticity == "Light orange"
+    "#F59D2A"
+  elsif chromaticity == "orange"
+    "#EE7738"
+  elsif chromaticity == "Red"
+    "#E03E36"
+  elsif chromaticity == "None"
+    "#3C2F3D"
+  elsif chromaticity == "No visibility"
+    "#041122"
+  end
+end
 
 
 def solar_chromaticity(solar_class)
@@ -635,7 +762,11 @@ end
 
 
 
-
+def random_moon_orbital_period
+  a = rand(0.000...860.000)
+  a2 = a.round(4)
+  a2
+end
 
 
 
@@ -676,8 +807,32 @@ end
 
 
 
+def random_moon_number
+  number1 = 0
+  number2 = 0
+  number3 = 0
+  number4 = 1
+  number5 = rand(0..3)
+  number6 = rand(1..5)
+  number7 = rand(4..7)
+  numbers = [number1, number2, number3, number4, number5, number6, number7]
+  random_number = numbers.sample
+  random_number
+end
 
 
+def random_moon_distance
+  number1 = rand(5..10)
+  number2 = rand(5..15)
+  number3 = rand(5..10)
+  number4 = rand(5..15)
+  number5 = rand(5..40)
+  number6 = rand(10..35)
+  number7 = rand(15..20)
+  numbers = [number1, number2, number3, number4, number5, number6, number7]
+  random_number = numbers.sample
+  random_number
+end
 
 
 
@@ -732,7 +887,7 @@ class Galaxy < ActiveRecord::Base
 
   def self.constructor
     random_name = ["AX22", "VB67", "LM56", "HJ87", "ML04", "FS34"].sample
-    @random_number_of_sun = rand(1..100)
+    @random_number_of_sun = rand(50..500)
     @galaxy = Galaxy.create(name:"#{random_name}", number_of_suns: @random_number_of_sun)
 
     @random_number_of_sun.times do
@@ -745,6 +900,7 @@ class Galaxy < ActiveRecord::Base
       @solar_class = solar_class(@random_solar_radius, @random_solar_mass)
       @solar_type = solar_type(@solar_class)
       @chromaticity = solar_chromaticity(@solar_class)
+      @solar_color = solar_color(@chromaticity)
       @sun = Sun.create(name: "#{@random_solar_name}",
                         solar_distance: @random_solar_distance,
                         number_of_planets: @random_number_of_planet,
@@ -753,15 +909,16 @@ class Galaxy < ActiveRecord::Base
                         solar_type: @solar_type,
                         solar_class: @solar_class,
                         chromaticity: @chromaticity,
+                        solar_color: @solar_color,
                         radius: @random_solar_radius,
                         ecliptic_distance: @random_ecliptic_distance)
       @random_number_of_planet.times do
         @random_planet_name = random_planet_name
+        @random_solar_to_planet_distance = fullrange_dist
         @temp_planet_radius = fullrange
         @temp_planet_mass = fullrange
-        @random_planet_radius = balanced_radius(@temp_planet_radius, @temp_planet_mass)
+        @random_planet_radius = balanced_radius(@temp_planet_radius, @temp_planet_mass, @random_solar_to_planet_distance)
         @random_planet_mass = balanced_mass(@temp_planet_radius, @temp_planet_mass)
-        @random_solar_to_planet_distance = fullrange
         @orbital_period = orbital_period(@random_solar_radius, @random_solar_mass, @random_solar_to_planet_distance)
         @orbital_speed = orbital_speed(@random_solar_radius, @random_solar_mass, @random_solar_to_planet_distance)
         @gravity = gravity(@random_planet_mass, @random_planet_radius)
@@ -770,8 +927,11 @@ class Galaxy < ActiveRecord::Base
         @water = presence_of_water(@random_solar_to_planet_distance, @temperature)
         @liquid_water = presence_of_liquid_water(@temperature, @water)
         @atmosphere = atmosphere(@planet_type)
+        @planet_color = planet_color(@planet_type)
         @life = presence_of_life(@temperature, @liquid_water)
-        Planet.create(name: "#{@random_planet_name}",
+        @rotation_period = fullrange_dist
+        @random_moon_number = random_moon_number
+        @planet = Planet.create(name: "#{@random_planet_name}",
                       radius: @random_planet_radius,
                       mass: @random_planet_mass,
                       sun_id: @sun.id,
@@ -780,13 +940,29 @@ class Galaxy < ActiveRecord::Base
                       orbital_period: @orbital_period,
                       orbital_speed: @orbital_speed,
                       gravity: @gravity,
+                      rotation_period: @rotation_period,
                       temperature: @temperature,
                       planet_type: @planet_type,
+                      planet_color: @planet_color,
                       water: @water,
                       liquid_water: @liquid_water,
                       atmosphere: @atmosphere,
                       life: @life,
+                      moon_number: @random_moon_number,
                       solar_mass: @random_solar_mass)
+            @random_moon_number.times do
+              @random_moon_distance = random_moon_distance
+              @random_moon_orbital = random_moon_orbital_period
+              Moon.create(name: "#{@random_planet_name}",
+                      radius: @random_planet_radius,
+                      mass: @random_planet_mass,
+                      planet_id: @planet.id,
+                      rotation: @rotation_period,
+                      temperature: @temperature,
+                      distance_from_planet: @random_moon_distance,
+                      atmosphere: false,
+                      orbital_period: @random_moon_orbital)
+            end
       end
     end
 

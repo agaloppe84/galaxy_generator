@@ -3,6 +3,9 @@ module PlanetsHelper
   EARTH_RADIUS = 6371.009
   EARTH_MASS = (5.9722*(10**24))
   EARTH_GRAVITY = 9.8196
+  EARTH_DAY = 24.0
+  ROTATION_PERIOD = 24
+  DAY_IN_SECOND = 86400
 
   def revolution_in_years(days)
     y = days / EARTH_YEAR
@@ -37,5 +40,22 @@ module PlanetsHelper
     g = gravity / EARTH_GRAVITY
     g.round(3)
   end
+
+  def rotation_in_hours(days)
+    hours = days * ROTATION_PERIOD
+    hours.round(3)
+  end
+
+  def rotation_in_days(hours)
+    d = hours / EARTH_DAY
+    d.round(3)
+  end
+
+  def second_in_days(seconds)
+    days = (seconds)/DAY_IN_SECOND
+    days = days.round(3)
+    days
+  end
+
 
 end

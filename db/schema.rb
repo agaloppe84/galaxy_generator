@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170102215922) do
+ActiveRecord::Schema.define(version: 20170104144608) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,11 +23,27 @@ ActiveRecord::Schema.define(version: 20170102215922) do
     t.datetime "updated_at",     null: false
   end
 
+  create_table "moons", force: :cascade do |t|
+    t.float    "radius"
+    t.float    "mass"
+    t.float    "orbital_period"
+    t.float    "distance_from_planet"
+    t.float    "temperature"
+    t.float    "rotation"
+    t.boolean  "atmosphere"
+    t.string   "name"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+    t.integer  "planet_id"
+  end
+
+  add_index "moons", ["planet_id"], name: "index_moons_on_planet_id", using: :btree
+
   create_table "planets", force: :cascade do |t|
     t.string   "name"
     t.float    "radius"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
     t.integer  "sun_id"
     t.float    "solar_mass"
     t.float    "solar_radius"
@@ -36,11 +52,14 @@ ActiveRecord::Schema.define(version: 20170102215922) do
     t.float    "orbital_speed"
     t.float    "gravity"
     t.float    "temperature"
+    t.float    "rotation_period"
     t.string   "planet_type"
     t.boolean  "atmosphere"
     t.boolean  "water"
     t.boolean  "liquid_water"
     t.boolean  "life"
+    t.string   "planet_color"
+    t.integer  "moon_number"
     t.float    "mass"
   end
 
@@ -57,6 +76,7 @@ ActiveRecord::Schema.define(version: 20170102215922) do
     t.float    "radius"
     t.string   "solar_type"
     t.string   "chromaticity"
+    t.string   "solar_color"
     t.float    "ecliptic_distance"
     t.string   "solar_class"
   end
@@ -81,6 +101,7 @@ ActiveRecord::Schema.define(version: 20170102215922) do
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
+  add_foreign_key "moons", "planets"
   add_foreign_key "planets", "suns"
   add_foreign_key "suns", "galaxies"
 end

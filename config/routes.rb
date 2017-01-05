@@ -5,7 +5,9 @@ Rails.application.routes.draw do
   # See how all your routes lay out with "rake routes".
   resources :galaxies do
     resources :suns do
-      resources :planets
+      resources :planets do
+        resources :moons
+      end
     end
   end
   # You can have the root of your site routed with "root"

@@ -9,6 +9,8 @@ class SunsController < ApplicationController
   def show
     @sun = Sun.find(params[:id])
     @planets = @sun.planets
+    @life_planets = @sun.planets.where(:life => true)
+    @life_planets_size = @life_planets.size
   end
 
   def new
@@ -21,7 +23,7 @@ class SunsController < ApplicationController
   end
 
   def sun_params
-    params.require(:sun).permit(:name, :solar_distance, :number_of_planets, :galaxy_id, :mass, :radius, :solar_type, :chromaticity, :ecliptic_distance, :solar_class)
+    params.require(:sun).permit(:name, :solar_distance, :number_of_planets, :galaxy_id, :mass, :radius, :solar_type, :chromaticity, :ecliptic_distance, :solar_class, :solar_color)
   end
 
   def find_galaxy
