@@ -626,6 +626,19 @@
   color: #F7E74A;
 }
 
+.revo-color5 {
+  font-size: 11px;
+  margin-right: 8px;
+  color: #17B3C1;
+}
+
+
+
+
+
+
+
+
 .icon-ios-snowy {
   font-size: 20px;
   color: #17B3C1;
@@ -773,4 +786,187 @@
   font-size: 11px;
   font-family: "Circular-Book";
 }
+
+
+
+
+
+.magic {
+  font-family: "Circular-Medium";
+  font-size: 15px;
+}
+
+.magic-pad {
+  padding-top: 4px;
+}
+
+
+.daytime {
+  margin-right: 5px;
+  font-size: 12px;
+  color: #F7E74A;
+}
+
+.nightime {
+  margin-right: 5px;
+  font-size: 12px;
+  color: #2E94B9;
+}
+
+
+
+
+.daytime-text {
+  font-size: 11px;
+  font-family: "Circular-Book";
+  color: #F7E74A;
+  min-width: 60px;
+}
+
+.nightime-text {
+  font-size: 11px;
+  font-family: "Circular-Book";
+  color: #2E94B9;
+  min-width: 60px;
+}
+
+.dynamic-line {
+  height: 7px;
+  width: 100px;
+  border-radius: 2px;
+  position: relative;
+  border: 1px solid #F7E74A;
+}
+
+.dyn-line-size {
+  height: 3px;
+  width: 100px;
+  border-radius: 2px;
+  position: relative;
+  border: 1px solid #F7E74A;
+
+}
+
+
+.dyn-line-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-radius: 2px;
+  background-color: #F7E74A;
+}
+
+.dyn-line-size-full {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-radius: 2px;
+  background-color: #F7E74A;
+}
+
+
+
+
+
+
+
+
+.very-little-line-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.very-little-line {
+  width: 1px;
+  height: 6px;
+  position: absolute;
+  right: 0;
+  top: -6px;
+  border-right: 2px solid #F7E74A;
+  opacity: 0.6;
+}
+
+
+.circadian-percent {
+  font-size: 10px;
+  position: absolute;
+  top: -14px;
+  left: -7px;
+  font-family: "Circular-Book";
+  letter-spacing: 1px;
+  color: #F7E74A;
+}
+
+.other-color-circadian {
+  color: #2E94B9;
+}
+
+
+.very-little-line-container-trig {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.very-little-line-trig {
+  width: 1px;
+  height: 6px;
+  position: absolute;
+  right: 0;
+  top: -6px;
+  border-right: 2px solid #F7E74A;
+  opacity: 0.6;
+}
+
+
+
+
+
+
+
+
+
+.other-color {
+  background-color: #2E94B9;
+  border-color: #2E94B9;
+}
+
+.other-color-cont {
+  border-color: #2E94B9;
+}
+
+.icon-container-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+}
+
+.my-rotate-dot {
+  width: 12px;
+  height: 12px;
+  position: relative;
+  border-radius: 50%;
+  border: 2px solid #2E94B9;
+  margin-right: 6px;
+}
+
+.my-rotate-dot-line {
+  width: 4px;
+  height: 4px;
+  position: absolute;
+  border-bottom: 2px solid #2E94B9;
+  top: 1px;
+  left: 4px;
+}
+
+
+
+
+
+
 

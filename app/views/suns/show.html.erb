@@ -99,13 +99,6 @@
         var Percent<%= planet.id %> = (Intimer<%= planet.id %> * 100) / Time<%= planet.id %>;
         var Text<%= planet.id %> = roundToTwo(Percent<%= planet.id %>);
         $(".revpercdyn<%= planet.id %>").text(Text<%= planet.id %>);
-        // if (Percent<%= planet.id %> >= 100.00) {
-        //   var Intimer<%= planet.id %> = Timer<%= planet.id %> = 0;
-        // }
-        // if (Percent<%= planet.id %> >= 100.00) {
-        //   Orbit<%= planet.id %> += 1;
-        //   $(".orbitcount<%= planet.id %>").text("Orbit: " + Orbit<%= planet.id %>);
-        // }
       }, 100);
         setInterval(function(){
           var Intimer<%= planet.id %> = Timer<%= planet.id %> = 0;
@@ -135,11 +128,11 @@
 
         setInterval(function(){
           var Currentpercent<%= planet.id %> = $( ".revpercdyn<%= planet.id %>" ).text();
-          console.log(Currentpercent<%= planet.id %>)
+
           if (Currentpercent<%= planet.id %> > 50) {
 
-            var Newtempneg<%= planet.id %> = Temperature<%= planet.id %> += 0.42;
-            var Dyntempneg<%= planet.id %> = Newtempneg<%= planet.id %> += 0.42;
+            var Newtempneg<%= planet.id %> = Temperature<%= planet.id %> += 0.18;
+            var Dyntempneg<%= planet.id %> = Newtempneg<%= planet.id %> += 0.18;
             var Dynroundneg<%= planet.id %> = (roundToTwo(Dyntempneg<%= planet.id %>));
             $(".dynamictemp<%= planet.id %>").text(Dynroundneg<%= planet.id %>);
             $(".season-type<%= planet.id %>").text("Summer");
@@ -149,8 +142,8 @@
 
         } else {
 
-            var Newtemppos<%= planet.id %> = Temperature<%= planet.id %> += -0.42;
-            var Dyntemppos<%= planet.id %> = Newtemppos<%= planet.id %> += -0.42;
+            var Newtemppos<%= planet.id %> = Temperature<%= planet.id %> += -0.18;
+            var Dyntemppos<%= planet.id %> = Newtemppos<%= planet.id %> += -0.18;
             var Dynroundpos<%= planet.id %> = (roundToTwo(Dyntemppos<%= planet.id %>));
             $(".dynamictemp<%= planet.id %>").text(Dynroundpos<%= planet.id %>);
             $(".season-type<%= planet.id %>").text("Winter");
@@ -160,6 +153,63 @@
 
         }
         }, 300);
+
+        $(".euclidian<%= planet.id %>").addClass("fa");
+        var Switch<%= planet.id %> = <%= (planet.rotation_period)*1000 %>;
+
+        setInterval(function(){
+
+          $(".euclidian<%= planet.id %>").toggleClass("fa-sun-o");
+          $(".euclidian<%= planet.id %>").toggleClass("fa-moon-o");
+
+        }, Switch<%= planet.id %> * 10);
+
+
+        setInterval(function(){
+         var TestTrue<%= planet.id %> = $(".euclidian<%= planet.id %>").hasClass("fa-sun-o");
+         if (TestTrue<%= planet.id %> == true) {
+          $(".euclidian-text<%= planet.id %>").text("Daytime");
+         } else {
+          $(".euclidian-text<%= planet.id %>").text("Nightime");
+         }
+        }, 20 );
+
+
+        setInterval(function(){
+         var TestTrueB<%= planet.id %> = $(".euclidian<%= planet.id %>").hasClass("fa-sun-o");
+         if (TestTrueB<%= planet.id %> == true) {
+          $(".euclidian<%= planet.id %>").removeClass("nightime");
+          $(".euclidian<%= planet.id %>").addClass("daytime");
+          $(".euclidian-text<%= planet.id %>").removeClass("nightime-text");
+          $(".euclidian-text<%= planet.id %>").addClass("daytime-text");
+         } else {
+          $(".euclidian<%= planet.id %>").removeClass("daytime");
+          $(".euclidian<%= planet.id %>").addClass("nightime");
+          $(".euclidian-text<%= planet.id %>").removeClass("daytime-text");
+          $(".euclidian-text<%= planet.id %>").addClass("nightime-text");
+         }
+        }, 20 );
+
+        var TempWidth<%= planet.id %> = 0
+        setInterval(function(){
+          TempWidth<%= planet.id %> += 0.1
+          $(".dyn-line-container<%= planet.id %>").width(TempWidth<%= planet.id %>);
+          $(".circ-number<%= planet.id %>").text((Math.floor(TempWidth<%= planet.id %>)) + "%");
+
+        }, (Switch<%= planet.id %> * 10) / 1000 );
+
+        setInterval(function(){
+          TempWidth<%= planet.id %> = 0;
+        }, Switch<%= planet.id %> * 10 );
+
+
+
+        setInterval(function(){
+          $(".dyn-line-container<%= planet.id %>").toggleClass( "other-color" );
+          $(".dynamic-line<%= planet.id %>").toggleClass( "other-color-cont" );
+          $(".very-little-line<%= planet.id %>").toggleClass( "other-color-cont" );
+          $(".circ-number<%= planet.id %>").toggleClass( "other-color-circadian" );
+        }, Switch<%= planet.id %> * 10 );
 
 
 
@@ -204,32 +254,60 @@
                   <% end %>
 
 
+
+                  <div class="flex-dispo" style="margin-top: 5px;">
+                      <div class="euclidian<%= planet.id %> fa fa-sun-o"></div>
+                      <div class="euclidian-text<%= planet.id %>"></div>
+
+
+                      <div class="dynamic-line<%= planet.id %> dyn-line-size">
+                        <div class="dyn-line-container<%= planet.id %> dyn-line-size-full">
+                          <div class="very-little-line-container<%= planet.id %> very-little-line-container-trig">
+                            <div class="very-little-line<%= planet.id %> very-little-line-trig">
+                              <div class="circ-number<%= planet.id %> circadian-percent"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+
+                  </div>
+
+
+
+
                   <div class="great-header">
                     <div class="small-header-text">Orbital infos</div>
                   </div>
 
 
-                  <div class="flex-dispo">
-                      <div class="rotation-time revo-color">Revolution</div>
-                      <i class="fa fa-adjust planet-animation revo-color" aria-hidden="true" style="animation-duration: <%= planet.orbital_period/150 %>s;"></i>
-                      <div class="rotation-time-small revo-color"><%= "#{planet.orbital_period} Days (#{revolution_in_years(planet.orbital_period)} Years)" %></div>
+                  <div class="flex-dispo" style="margin-bottom: 5px;">
+                       <div class="my-rotate-dot planet-animation" style="animation-duration: <%= planet.orbital_period / 12 %>s;">
+                          <div class="my-rotate-dot-line"></div>
+                        </div>
+                      <div class="rotation-time revo-color5">Revolution</div>
+                      <div class="rotation-time-small revo-color5"><%= "#{planet.orbital_period} Days (#{revolution_in_years(planet.orbital_period)} Years)" %></div>
                   </div>
 
 
                   <div class="flex-dispo">
-                      <div class="rotation-time">Rotation</div>
-                      <i class="fa fa-adjust planet-animation" aria-hidden="true" style="animation-duration: <%= planet.rotation_period/3 %>s;"></i>
-                      <div class="rotation-time-small"><%= "#{(rotation_in_hours(planet.rotation_period)).round(1)} Hours (#{(rotation_in_days(rotation_in_hours(planet.rotation_period))).round(1)} Days)" %></div>
+
+                        <div class="my-rotate-dot planet-animation" style="animation-duration: <%= planet.rotation_period * 10 %>s;">
+                          <div class="my-rotate-dot-line"></div>
+                        </div>
+
+                      <div class="rotation-time revo-color5">Rotation</div>
+                      <div class="rotation-time-small revo-color5"><%= "#{(rotation_in_hours(planet.rotation_period)).round(1)} Hours (#{(rotation_in_days(rotation_in_hours(planet.rotation_period))).round(1)} Days)" %></div>
                   </div>
 
                   <div class="flex-dispo">
-                      <div class="path-and-orbit">Path: </div>
-                      <div class="revpercdyn<%= planet.id %> numbers-dynamic" style="min-width: 10px;"></div>
+                      <div class="path-and-orbit magic-pad">Path: </div>
+                      <div class="revpercdyn<%= planet.id %> numbers-dynamic magic" style="min-width: 10px;"></div>
                       <div class="numbers-dynamic">%</div>
                   </div>
                   <div class="flex-dispo">
-                      <div class="path-and-orbit">Orbits: </div>
-                      <div class="orbitcount<%= planet.id %> numbers-dynamic" style="min-width: 10px;">0</div>
+                      <div class="path-and-orbit magic-pad">Orbits: </div>
+                      <div class="orbitcount<%= planet.id %> numbers-dynamic magic" style="min-width: 10px;">0</div>
                   </div>
 
 
@@ -312,6 +390,8 @@
                       <div class="dyn-current-temp"><%= "#{planet.solar_distance}" %></div>
                       <div class="numbers-dynamic2">Ua</div>
                   </div>
+
+
 
 
 
