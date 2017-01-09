@@ -57,5 +57,37 @@ module PlanetsHelper
     days
   end
 
+  def adjusted_solar_radius(solar_radius)
+    if solar_radius < 10
+      solar_radius
+    elsif solar_radius < 20
+      solar_radius / 2
+    elsif solar_radius < 30
+      solar_radius / 8
+    elsif solar_radius < 50
+      solar_radius / 16
+    elsif solar_radius < 120
+      solar_radius / 24
+    else
+      solar_radius / 32
+    end
+  end
+
+
+  def hex_without_hashtag(color)
+    c = color
+    c.delete! '#'
+  end
+
+
+
+
+
+
+
+
+
+
+
 
 end

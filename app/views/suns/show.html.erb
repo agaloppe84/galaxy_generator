@@ -71,15 +71,15 @@
     </div>
   </div>
 <div class="system-with-sun-and-planets">
+   <div class="solar-eruption" style="width: <%= (adjusted_solar_radius(@sun.radius)) * 100 %>px;height: <%= (adjusted_solar_radius(@sun.radius)) * 100 %>px;"></div>
+   <div class="ecliptic-big-line">
+     <div class="ecliptic-big-line-relative">
+       <div class="ecliptic-big-line-text">Orbital plan</div>
+     </div>
+   </div>
 
-
-
-  <div class="sun-system" style="width: 50px;height: 50px;left: calc(50% - 50px/2);top: calc(50% - 50px/2);background-color: <%= @sun.solar_color %>;box-shadow: 0px 0px 120px 20px <%= @sun.solar_color %>;"></div>
-
-
-
-
-
+  <div class="sun-system" style="width: 50px;height: 50px;left: calc(50% - 50px/2);top: calc(50% - 50px/2);background-color: <%= @sun.solar_color %>;box-shadow: 0px 0px 120px 20px <%= @sun.solar_color %>;filter: blur(4px);">
+  </div>
 
 
 
@@ -213,6 +213,37 @@
 
 
 
+        var SunRadius = <%= adjusted_solar_radius(@sun.radius) * 100 %>;
+        var RoundSunRadius = Math.floor(SunRadius);
+
+
+
+
+        setInterval(function(){
+          $(".solar-eruption").width(RoundSunRadius);
+          $(".solar-eruption").fadeTo(10000, 0);
+
+          var CounterBis = 0;
+          var WidthIncrement = 0;
+          function foo()
+          {
+            if (CounterBis < 600){
+              CounterBis++;
+              WidthIncrement = WidthIncrement + 1;
+              var NewWidth = WidthIncrement + RoundSunRadius;
+              window.setTimeout(foo, 20);
+              console.log(NewWidth);
+              $(".solar-eruption").width(NewWidth);
+              $(".solar-eruption").height(NewWidth);
+            } else {
+              $(".solar-eruption").fadeTo(10000, 0.6);
+              $(".solar-eruption").width(RoundSunRadius);
+              $(".solar-eruption").height(RoundSunRadius);
+            }
+
+          }
+          foo()
+        }, 90000 );
 
 
 
@@ -224,6 +255,9 @@
     <% end %>
 
     <div class="planet-center" style="width: 50px;height: 50px;left: calc(50% - 50px/2);top: calc(50% - 50px/2)">
+
+
+
       <div class="planet-center-test planet-animation" style="animation-duration: <%= planet.orbital_period/12 %>s;">
         <div class="planet-orbit planet-animation-reverse" style="background-color: <%= planet.planet_color %>;right: -<%= planet.solar_distance * 40 %>px;width: <%= planet.radius.to_i * 2 %>px;height: <%= planet.radius.to_i * 2 %>px;top: calc(50% - (<%= planet.radius.to_i / 2 %>px));animation-duration: <%= planet.orbital_period/12 %>s;">
           <div class="planet-orbit-name-container">
