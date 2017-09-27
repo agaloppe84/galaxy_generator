@@ -7,7 +7,8 @@ class GalaxiesController < ApplicationController
 
   def show
     @galaxy = Galaxy.find(params[:id])
-    @suns = @galaxy.suns
+    @suns = @galaxy.suns.order(:solar_type)
+
     @f_stars = @galaxy.suns.where(:solar_class => "F")
     @f_stars_size = @f_stars.size
     @g_stars = @galaxy.suns.where(:solar_class => "G")
@@ -48,7 +49,7 @@ class GalaxiesController < ApplicationController
   end
 
   def galaxy_params
-    params.require(:galaxy).permit(:name, :number_of_suns)
+    params.require(:galaxy).permit(:name, :number_of_suns, :galaxy_type)
   end
 
 end

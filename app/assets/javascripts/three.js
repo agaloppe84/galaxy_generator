@@ -45800,3 +45800,864 @@ THREE.ConvexGeometry.prototype = Object.create( THREE.Geometry.prototype );
 THREE.ConvexGeometry.prototype.constructor = THREE.ConvexGeometry;
 
 
+
+
+
+
+
+/**
+ * @author alteredq / http://alteredqualia.com/
+ */
+
+THREE.EffectComposer = function ( renderer, renderTarget ) {
+
+  this.renderer = renderer;
+
+  if ( renderTarget === undefined ) {
+
+    var parameters = {
+      minFilter: THREE.LinearFilter,
+      magFilter: THREE.LinearFilter,
+      format: THREE.RGBAFormat,
+      stencilBuffer: false
+    };
+    var size = renderer.getSize();
+    renderTarget = new THREE.WebGLRenderTarget( size.width, size.height, parameters );
+
+  }
+
+  this.renderTarget1 = renderTarget;
+  this.renderTarget2 = renderTarget.clone();
+
+  this.writeBuffer = this.renderTarget1;
+  this.readBuffer = this.renderTarget2;
+
+  this.passes = [];
+
+  if ( THREE.CopyShader === undefined )
+    console.error( "THREE.EffectComposer relies on THREE.CopyShader" );
+
+  this.copyPass = new THREE.ShaderPass( THREE.CopyShader );
+
+};
+
+Object.assign( THREE.EffectComposer.prototype, {
+
+  swapBuffers: function() {
+
+    var tmp = this.readBuffer;
+    this.readBuffer = this.writeBuffer;
+    this.writeBuffer = tmp;
+
+  },
+
+  addPass: function ( pass ) {
+
+    this.passes.push( pass );
+
+    var size = this.renderer.getSize();
+    pass.setSize( size.width, size.height );
+
+  },
+
+  insertPass: function ( pass, index ) {
+
+    this.passes.splice( index, 0, pass );
+
+  },
+
+  render: function ( delta ) {
+
+    var maskActive = false;
+
+    var pass, i, il = this.passes.length;
+
+    for ( i = 0; i < il; i ++ ) {
+
+      pass = this.passes[ i ];
+
+      if ( pass.enabled === false ) continue;
+
+      pass.render( this.renderer, this.writeBuffer, this.readBuffer, delta, maskActive );
+
+      if ( pass.needsSwap ) {
+
+        if ( maskActive ) {
+
+          var context = this.renderer.context;
+
+          context.stencilFunc( context.NOTEQUAL, 1, 0xffffffff );
+
+          this.copyPass.render( this.renderer, this.writeBuffer, this.readBuffer, delta );
+
+          context.stencilFunc( context.EQUAL, 1, 0xffffffff );
+
+        }
+
+        this.swapBuffers();
+
+      }
+
+      if ( THREE.MaskPass !== undefined ) {
+
+        if ( pass instanceof THREE.MaskPass ) {
+
+          maskActive = true;
+
+        } else if ( pass instanceof THREE.ClearMaskPass ) {
+
+          maskActive = false;
+
+        }
+
+      }
+
+    }
+
+  },
+
+  reset: function ( renderTarget ) {
+
+    if ( renderTarget === undefined ) {
+
+      var size = this.renderer.getSize();
+
+      renderTarget = this.renderTarget1.clone();
+      renderTarget.setSize( size.width, size.height );
+
+    }
+
+    this.renderTarget1.dispose();
+    this.renderTarget2.dispose();
+    this.renderTarget1 = renderTarget;
+    this.renderTarget2 = renderTarget.clone();
+
+    this.writeBuffer = this.renderTarget1;
+    this.readBuffer = this.renderTarget2;
+
+  },
+
+  setSize: function ( width, height ) {
+
+    this.renderTarget1.setSize( width, height );
+    this.renderTarget2.setSize( width, height );
+
+    for ( var i = 0; i < this.passes.length; i ++ ) {
+
+      this.passes[i].setSize( width, height );
+
+    }
+
+  }
+
+} );
+
+
+THREE.Pass = function () {
+
+  // if set to true, the pass is processed by the composer
+  this.enabled = true;
+
+  // if set to true, the pass indicates to swap read and write buffer after rendering
+  this.needsSwap = true;
+
+  // if set to true, the pass clears its buffer before rendering
+  this.clear = false;
+
+  // if set to true, the result of the pass is rendered to screen
+  this.renderToScreen = false;
+
+};
+
+Object.assign( THREE.Pass.prototype, {
+
+  setSize: function( width, height ) {},
+
+  render: function ( renderer, writeBuffer, readBuffer, delta, maskActive ) {
+
+    console.error( "THREE.Pass: .render() must be implemented in derived pass." );
+
+  }
+
+} );
+
+
+
+
+
+
+
+
+/**
+ * @author alteredq / http://alteredqualia.com/
+ */
+
+THREE.RenderPass = function ( scene, camera, overrideMaterial, clearColor, clearAlpha ) {
+
+  THREE.Pass.call( this );
+
+  this.scene = scene;
+  this.camera = camera;
+
+  this.overrideMaterial = overrideMaterial;
+
+  this.clearColor = clearColor;
+  this.clearAlpha = ( clearAlpha !== undefined ) ? clearAlpha : 0;
+
+  this.clear = true;
+  this.clearDepth = false;
+  this.needsSwap = false;
+
+};
+
+THREE.RenderPass.prototype = Object.assign( Object.create( THREE.Pass.prototype ), {
+
+  constructor: THREE.RenderPass,
+
+  render: function ( renderer, writeBuffer, readBuffer, delta, maskActive ) {
+
+    var oldAutoClear = renderer.autoClear;
+    renderer.autoClear = false;
+
+    this.scene.overrideMaterial = this.overrideMaterial;
+
+    var oldClearColor, oldClearAlpha;
+
+    if ( this.clearColor ) {
+
+      oldClearColor = renderer.getClearColor().getHex();
+      oldClearAlpha = renderer.getClearAlpha();
+
+      renderer.setClearColor( this.clearColor, this.clearAlpha );
+
+    }
+
+    if ( this.clearDepth ) {
+
+      renderer.clearDepth();
+
+    }
+
+    renderer.render( this.scene, this.camera, this.renderToScreen ? null : readBuffer, this.clear );
+
+    if ( this.clearColor ) {
+
+      renderer.setClearColor( oldClearColor, oldClearAlpha );
+
+    }
+
+    this.scene.overrideMaterial = null;
+    renderer.autoClear = oldAutoClear;
+  }
+
+} );
+
+
+
+
+
+
+
+/**
+ * RaytracingRenderer renders by raytracing it's scene. However, it does not
+ * compute the pixels itself but it hands off and coordinates the taks for workers.
+ * The workers compute the pixel values and this renderer simply paints it to the Canvas.
+ *
+ * @author zz85 / http://github.com/zz85
+ */
+
+THREE.RaytracingRenderer = function ( parameters ) {
+
+  console.log( 'THREE.RaytracingRenderer', THREE.REVISION );
+
+  parameters = parameters || {};
+
+  var scope = this;
+  var pool = [];
+  var renderering = false;
+
+  var canvas = document.createElement( 'canvas' );
+  var context = canvas.getContext( '2d', {
+    alpha: parameters.alpha === true
+  } );
+
+  var maxRecursionDepth = 3;
+
+  var canvasWidth, canvasHeight;
+  var canvasWidthHalf, canvasHeightHalf;
+
+  var clearColor = new THREE.Color( 0x000000 );
+
+  this.domElement = canvas;
+
+  this.autoClear = true;
+
+  var workers = parameters.workers;
+  var blockSize = parameters.blockSize || 64;
+  this.randomize = parameters.randomize;
+
+  var toRender = [], workerId = 0, sceneId = 0;
+
+  console.log( '%cSpinning off ' + workers + ' Workers ', 'font-size: 20px; background: black; color: white; font-family: monospace;' );
+
+  this.setWorkers = function( w ) {
+
+    workers = w || navigator.hardwareConcurrency || 4;
+
+    while ( pool.length < workers ) {
+      var worker = new Worker( parameters.workerPath );
+      worker.id = workerId++;
+
+      worker.onmessage = function( e ) {
+
+        var data = e.data;
+
+        if ( ! data ) return;
+
+        if ( data.blockSize && sceneId == data.sceneId ) { // we match sceneId here to be sure
+
+          var imagedata = new ImageData( new Uint8ClampedArray( data.data ), data.blockSize, data.blockSize );
+          context.putImageData( imagedata, data.blockX, data.blockY );
+
+          // completed
+
+          console.log( 'Worker ' + this.id, data.time / 1000, ( Date.now() - reallyThen ) / 1000 + ' s' );
+
+          if ( pool.length > workers ) {
+
+            pool.splice( pool.indexOf( this ), 1 );
+            return this.terminate();
+
+          }
+
+          renderNext( this );
+
+        }
+
+      };
+
+      worker.color = new THREE.Color().setHSL( Math.random() , 0.8, 0.8 ).getHexString();
+      pool.push( worker );
+
+      if ( renderering ) {
+
+        updateSettings( worker );
+
+        worker.postMessage( {
+          scene: sceneJSON,
+          camera: cameraJSON,
+          annex: materials,
+          sceneId: sceneId
+        } );
+
+        renderNext( worker );
+
+      }
+
+    }
+
+    if ( ! renderering ) {
+
+      while ( pool.length > workers ) {
+
+        pool.pop().terminate();
+
+      }
+
+    }
+
+  };
+
+  this.setWorkers( workers );
+
+  this.setClearColor = function ( color, alpha ) {
+
+    clearColor.set( color );
+
+  };
+
+  this.setPixelRatio = function () {};
+
+  this.setSize = function ( width, height ) {
+
+    canvas.width = width;
+    canvas.height = height;
+
+    canvasWidth = canvas.width;
+    canvasHeight = canvas.height;
+
+    canvasWidthHalf = Math.floor( canvasWidth / 2 );
+    canvasHeightHalf = Math.floor( canvasHeight / 2 );
+
+    context.fillStyle = 'white';
+
+    pool.forEach( updateSettings );
+
+  };
+
+  this.setSize( canvas.width, canvas.height );
+
+  this.clear = function () {
+
+  };
+
+  //
+
+  var totalBlocks, xblocks, yblocks;
+
+  function updateSettings( worker ) {
+
+    worker.postMessage( {
+
+      init: [ canvasWidth, canvasHeight ],
+      worker: worker.id,
+      // workers: pool.length,
+      blockSize: blockSize
+
+    } );
+
+  }
+
+  function renderNext( worker ) {
+    if ( ! toRender.length ) {
+
+      renderering = false;
+      return scope.dispatchEvent( { type: "complete" } );
+
+    }
+
+    var current = toRender.pop();
+
+    var blockX = ( current % xblocks ) * blockSize;
+    var blockY = ( current / xblocks | 0 ) * blockSize;
+
+    worker.postMessage( {
+      render: true,
+      x: blockX,
+      y: blockY,
+      sceneId: sceneId
+    } );
+
+    context.fillStyle = '#' + worker.color;
+
+    context.fillRect( blockX, blockY, blockSize, blockSize );
+
+  }
+
+  var materials = {};
+
+  var sceneJSON, cameraJSON, reallyThen;
+
+  // additional properties that were not serialize automatically
+
+  var _annex = {
+
+    mirror: 1,
+    reflectivity: 1,
+    refractionRatio: 1,
+    glass: 1
+
+  };
+
+  function serializeObject( o ) {
+
+    var mat = o.material;
+
+    if ( ! mat || mat.uuid in materials ) return;
+
+    var props = {};
+    for ( var m in _annex ) {
+
+      if ( mat[ m ] !== undefined ) {
+
+        props[ m ] = mat[ m ];
+
+      }
+
+    }
+
+    materials[ mat.uuid ] = props;
+  }
+
+  this.render = function ( scene, camera ) {
+
+    renderering = true;
+
+    // update scene graph
+
+    if ( scene.autoUpdate === true ) scene.updateMatrixWorld();
+
+    // update camera matrices
+
+    if ( camera.parent === null ) camera.updateMatrixWorld();
+
+
+    sceneJSON = scene.toJSON();
+    cameraJSON = camera.toJSON();
+    ++ sceneId;
+
+    scene.traverse( serializeObject );
+
+    pool.forEach( function( worker ) {
+
+      worker.postMessage( {
+        scene: sceneJSON,
+        camera: cameraJSON,
+        annex: materials,
+        sceneId: sceneId
+      } );
+    } );
+
+    context.clearRect( 0, 0, canvasWidth, canvasHeight );
+    reallyThen = Date.now();
+
+    xblocks = Math.ceil( canvasWidth / blockSize );
+    yblocks = Math.ceil( canvasHeight / blockSize );
+    totalBlocks = xblocks * yblocks;
+
+    toRender = [];
+
+    for ( var i = 0; i < totalBlocks; i ++ ) {
+
+      toRender.push( i );
+
+    }
+
+
+    // Randomize painting :)
+
+    if ( scope.randomize ) {
+
+      for ( var i = 0; i < totalBlocks; i ++ ) {
+
+        var swap = Math.random()  * totalBlocks | 0;
+        var tmp = toRender[ swap ];
+        toRender[ swap ] = toRender[ i ];
+        toRender[ i ] = tmp;
+
+      }
+
+    }
+
+
+    pool.forEach( renderNext );
+
+  };
+
+};
+
+Object.assign( THREE.RaytracingRenderer.prototype, THREE.EventDispatcher.prototype );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * @author huwb / http://huwbowles.com/
+ *
+ * God-rays (crepuscular rays)
+ *
+ * Similar implementation to the one used by Crytek for CryEngine 2 [Sousa2008].
+ * Blurs a mask generated from the depth map along radial lines emanating from the light
+ * source. The blur repeatedly applies a blur filter of increasing support but constant
+ * sample count to produce a blur filter with large support.
+ *
+ * My implementation performs 3 passes, similar to the implementation from Sousa. I found
+ * just 6 samples per pass produced acceptible results. The blur is applied three times,
+ * with decreasing filter support. The result is equivalent to a single pass with
+ * 6*6*6 = 216 samples.
+ *
+ * References:
+ *
+ * Sousa2008 - Crysis Next Gen Effects, GDC2008, http://www.crytek.com/sites/default/files/GDC08_SousaT_CrysisEffects.ppt
+ */
+
+THREE.ShaderGodRays = {
+
+  /**
+   * The god-ray generation shader.
+   *
+   * First pass:
+   *
+   * The input is the depth map. I found that the output from the
+   * THREE.MeshDepthMaterial material was directly suitable without
+   * requiring any treatment whatsoever.
+   *
+   * The depth map is blurred along radial lines towards the "sun". The
+   * output is written to a temporary render target (I used a 1/4 sized
+   * target).
+   *
+   * Pass two & three:
+   *
+   * The results of the previous pass are re-blurred, each time with a
+   * decreased distance between samples.
+   */
+
+  'godrays_generate': {
+
+    uniforms: {
+
+      tInput: {
+        value: null
+      },
+      fStepSize: {
+        value: 1.0
+      },
+      vSunPositionScreenSpace: {
+        value: new THREE.Vector2( 0.5, 0.5 )
+      }
+
+    },
+
+    vertexShader: [
+
+      "varying vec2 vUv;",
+
+      "void main() {",
+
+        "vUv = uv;",
+        "gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
+
+      "}"
+
+    ].join( "\n" ),
+
+    fragmentShader: [
+
+      "#define TAPS_PER_PASS 6.0",
+
+      "varying vec2 vUv;",
+
+      "uniform sampler2D tInput;",
+
+      "uniform vec2 vSunPositionScreenSpace;",
+      "uniform float fStepSize;", // filter step size
+
+      "void main() {",
+
+        // delta from current pixel to "sun" position
+
+        "vec2 delta = vSunPositionScreenSpace - vUv;",
+        "float dist = length( delta );",
+
+        // Step vector (uv space)
+
+        "vec2 stepv = fStepSize * delta / dist;",
+
+        // Number of iterations between pixel and sun
+
+        "float iters = dist/fStepSize;",
+
+        "vec2 uv = vUv.xy;",
+        "float col = 0.0;",
+
+        // This breaks ANGLE in Chrome 22
+        //  - see http://code.google.com/p/chromium/issues/detail?id=153105
+
+        /*
+        // Unrolling didnt do much on my hardware (ATI Mobility Radeon 3450),
+        // so i've just left the loop
+
+        "for ( float i = 0.0; i < TAPS_PER_PASS; i += 1.0 ) {",
+
+          // Accumulate samples, making sure we dont walk past the light source.
+
+          // The check for uv.y < 1 would not be necessary with "border" UV wrap
+          // mode, with a black border colour. I don't think this is currently
+          // exposed by three.js. As a result there might be artifacts when the
+          // sun is to the left, right or bottom of screen as these cases are
+          // not specifically handled.
+
+          "col += ( i <= iters && uv.y < 1.0 ? texture2D( tInput, uv ).r : 0.0 );",
+          "uv += stepv;",
+
+        "}",
+        */
+
+        // Unrolling loop manually makes it work in ANGLE
+
+        "if ( 0.0 <= iters && uv.y < 1.0 ) col += texture2D( tInput, uv ).r;",
+        "uv += stepv;",
+
+        "if ( 1.0 <= iters && uv.y < 1.0 ) col += texture2D( tInput, uv ).r;",
+        "uv += stepv;",
+
+        "if ( 2.0 <= iters && uv.y < 1.0 ) col += texture2D( tInput, uv ).r;",
+        "uv += stepv;",
+
+        "if ( 3.0 <= iters && uv.y < 1.0 ) col += texture2D( tInput, uv ).r;",
+        "uv += stepv;",
+
+        "if ( 4.0 <= iters && uv.y < 1.0 ) col += texture2D( tInput, uv ).r;",
+        "uv += stepv;",
+
+        "if ( 5.0 <= iters && uv.y < 1.0 ) col += texture2D( tInput, uv ).r;",
+        "uv += stepv;",
+
+        // Should technically be dividing by 'iters', but 'TAPS_PER_PASS' smooths out
+        // objectionable artifacts, in particular near the sun position. The side
+        // effect is that the result is darker than it should be around the sun, as
+        // TAPS_PER_PASS is greater than the number of samples actually accumulated.
+        // When the result is inverted (in the shader 'godrays_combine', this produces
+        // a slight bright spot at the position of the sun, even when it is occluded.
+
+        "gl_FragColor = vec4( col/TAPS_PER_PASS );",
+        "gl_FragColor.a = 1.0;",
+
+      "}"
+
+    ].join( "\n" )
+
+  },
+
+  /**
+   * Additively applies god rays from texture tGodRays to a background (tColors).
+   * fGodRayIntensity attenuates the god rays.
+   */
+
+  'godrays_combine': {
+
+    uniforms: {
+
+      tColors: {
+        value: null
+      },
+
+      tGodRays: {
+        value: null
+      },
+
+      fGodRayIntensity: {
+        value: 0.69
+      },
+
+      vSunPositionScreenSpace: {
+        value: new THREE.Vector2( 0.5, 0.5 )
+      }
+
+    },
+
+    vertexShader: [
+
+      "varying vec2 vUv;",
+
+      "void main() {",
+
+        "vUv = uv;",
+        "gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
+
+      "}"
+
+      ].join( "\n" ),
+
+    fragmentShader: [
+
+      "varying vec2 vUv;",
+
+      "uniform sampler2D tColors;",
+      "uniform sampler2D tGodRays;",
+
+      "uniform vec2 vSunPositionScreenSpace;",
+      "uniform float fGodRayIntensity;",
+
+      "void main() {",
+
+        // Since THREE.MeshDepthMaterial renders foreground objects white and background
+        // objects black, the god-rays will be white streaks. Therefore value is inverted
+        // before being combined with tColors
+
+        "gl_FragColor = texture2D( tColors, vUv ) + fGodRayIntensity * vec4( 1.0 - texture2D( tGodRays, vUv ).r );",
+        "gl_FragColor.a = 1.0;",
+
+      "}"
+
+    ].join( "\n" )
+
+  },
+
+
+  /**
+   * A dodgy sun/sky shader. Makes a bright spot at the sun location. Would be
+   * cheaper/faster/simpler to implement this as a simple sun sprite.
+   */
+
+  'godrays_fake_sun': {
+
+    uniforms: {
+
+      vSunPositionScreenSpace: {
+        value: new THREE.Vector2( 0.5, 0.5 )
+      },
+
+      fAspect: {
+        value: 1.0
+      },
+
+      sunColor: {
+        value: new THREE.Color( 0xffee00 )
+      },
+
+      bgColor: {
+        value: new THREE.Color( 0x000000 )
+      }
+
+    },
+
+    vertexShader: [
+
+      "varying vec2 vUv;",
+
+      "void main() {",
+
+        "vUv = uv;",
+        "gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
+
+      "}"
+
+    ].join( "\n" ),
+
+    fragmentShader: [
+
+      "varying vec2 vUv;",
+
+      "uniform vec2 vSunPositionScreenSpace;",
+      "uniform float fAspect;",
+
+      "uniform vec3 sunColor;",
+      "uniform vec3 bgColor;",
+
+      "void main() {",
+
+        "vec2 diff = vUv - vSunPositionScreenSpace;",
+
+        // Correct for aspect ratio
+
+        "diff.x *= fAspect;",
+
+        "float prop = clamp( length( diff ) / 0.5, 0.0, 1.0 );",
+        "prop = 0.35 * pow( 1.0 - prop, 3.0 );",
+
+        "gl_FragColor.xyz = mix( sunColor, bgColor, 1.0 - prop );",
+        "gl_FragColor.w = 1.0;",
+
+      "}"
+
+    ].join( "\n" )
+
+  }
+
+};

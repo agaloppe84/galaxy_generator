@@ -1,23 +1,92 @@
+<div class="galaxy-name">
+  <div class="galaxy-text-v2">GALAXY </div>
+  <div><%= @galaxy.name.upcase %></div>
+  <div class="separator"></div>
+  <div class="galaxy-name-text"><%= ("#{@galaxy.galaxy_type.capitalize} galaxy").upcase %></div>
+  <div class="separator"></div>
+  <div class="galaxy-name-text-v2"><%= "#{@galaxy.suns.count} STARS" %></div>
+</div>
 
-<%= @galaxy.name %>
-<br>
-<br>
-<br>
-<br>
+<% @suns.each do |sun| %>
 
-<% @galaxy.suns.each do |sun| %>
-  <%= "Name : #{sun.name}" %>
-  <%= "Class : #{sun.solar_class}" %>
-  <%= "Type : #{sun.solar_type}" %>
-  <%= "Chromaticity : #{sun.chromaticity}" %>
-  <%= "Ecliptic distance : #{sun.ecliptic_distance}" %>
-  <%= "Mass : #{sun.mass}" %>
-  <%= "Radius : #{sun.radius}" %>
-  <%= "Number of planets : #{sun.planets.count}" %>
-  <%= link_to "#{sun.name}", galaxy_sun_path(@galaxy, sun) %>
-  <br>
-  <br>
+
+  <% if sun == @suns.first %>
+    <div class="star-container" style="margin-top: 120px;">
+      <div class="star-container-item">
+        <div class="sci-bold">Star:</div>
+        <div class="sci-thin"><%= "#{sun.name}" %></div>
+      </div>
+      <div class="star-container-item-small">
+        <div class="small-solar-color-dot" style="background-color: <%= sun.solar_color %>;"></div>
+      </div>
+      <div class="star-container-item-medium">
+        <div class="sci-bold">Class:</div>
+        <div class="sci-thin"><%= "#{sun.solar_class}" %></div>
+      </div>
+      <div class="star-container-item-big">
+        <div class="sci-bold">Type:</div>
+        <div class="sci-thin-small"><%= "#{sun.solar_type}" %></div>
+      </div>
+      <div class="star-container-item">
+        <div class="sci-bold">Mass:</div>
+        <div class="sci-thin" style="color: <%= sun_mass_color(sun.mass.round(1)) %>;"><%= "#{sun.mass.round(1)} x sun" %></div>
+      </div>
+      <div class="star-container-item">
+        <div class="sci-bold">Radius:</div>
+        <div class="sci-thin" style="color: <%= sun_radius_color(sun.radius.round(1)) %>;"><%= "#{sun.radius.round(1)} x sun" %></div>
+      </div>
+      <div class="star-container-item">
+        <div class="sci-bold"><%= "#{sun.planets.count}" %></div>
+        <div class="sci-thin"><%= "planets" %></div>
+      </div>
+      <div class="star-container-item">
+        <div class="sci-bold"><%= link_to "#{sun.name}", galaxy_sun_path(@galaxy, sun) %></div>
+      </div>
+
+    </div>
+  <% else %>
+    <div class="star-container">
+      <div class="star-container-item">
+        <div class="sci-bold">Star:</div>
+        <div class="sci-thin"><%= "#{sun.name}" %></div>
+      </div>
+      <div class="star-container-item-small">
+        <div class="small-solar-color-dot" style="background-color: <%= sun.solar_color %>;"></div>
+      </div>
+      <div class="star-container-item-medium">
+        <div class="sci-bold">Class:</div>
+        <div class="sci-thin"><%= "#{sun.solar_class}" %></div>
+      </div>
+       <div class="star-container-item-big">
+        <div class="sci-bold">Type:</div>
+        <div class="sci-thin-small"><%= "#{sun.solar_type}" %></div>
+      </div>
+      <div class="star-container-item">
+        <div class="sci-bold">Mass:</div>
+        <div class="sci-thin" style="color: <%= sun_mass_color(sun.mass.round(1)) %>;"><%= "#{sun.mass.round(1)} x sun" %></div>
+      </div>
+      <div class="star-container-item">
+        <div class="sci-bold">Radius:</div>
+        <div class="sci-thin" style="color: <%= sun_radius_color(sun.radius.round(1)) %>;"><%= "#{sun.radius.round(1)} x sun" %></div>
+      </div>
+      <div class="star-container-item">
+        <div class="sci-bold"><%= "#{sun.planets.count}" %></div>
+        <div class="sci-thin"><%= "planets" %></div>
+      </div>
+      <div class="star-container-item">
+        <div class="sci-bold"><%= link_to "#{sun.name}", galaxy_sun_path(@galaxy, sun) %></div>
+      </div>
+
+
+    </div>
+  <% end %>
+
 <% end %>
+
+
+
+
+
 
 
 <%= "F stars : #{@f_stars_size}" %>

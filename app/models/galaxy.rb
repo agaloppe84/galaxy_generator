@@ -23,6 +23,142 @@
   SOLAR_DIST_FROM_CORE_IN_LY = 7620 * PARSEC_IN_LY
 
 
+def dynamic_random_number(min, max)
+  values = []
+  10.times do
+    values << rand(min..max)
+  end
+  values.sample
+end
+
+def alphabet
+  ("a".."z").to_a
+end
+
+def numerics
+  (0..9).to_a
+end
+
+
+
+
+
+def is_vowels_letter(letter)
+  "aeiouy".include?(letter)
+end
+
+def vowels_array
+  (alphabet.map {|letter| letter if is_vowels_letter(letter)}).compact
+end
+
+def consonants_array
+  (alphabet.map {|letter| letter unless is_vowels_letter(letter)}).compact
+end
+
+
+
+
+
+
+def vowels
+  vowels_array.sample
+end
+
+def consonants
+  consonants_array.sample
+end
+
+def complex_vowels
+  vowels + vowels
+end
+
+def double_vowels
+  current_vowel = vowels
+  current_vowel + current_vowel
+end
+
+def complex_consonants
+  consonants + consonants
+end
+
+def double_consonants
+  current_consonant = consonants
+  current_consonant + current_consonant
+end
+
+def syllabe_vs
+  vowels + consonants
+end
+
+def syllabe_cs
+  consonants + vowels
+end
+
+def decimals
+  numerics.sample.to_s
+end
+
+def digram
+  word1 = consonants.capitalize + complex_vowels + syllabe_cs + complex_consonants + vowels
+  word2 = syllabe_vs.capitalize + complex_vowels + syllabe_cs + complex_consonants + vowels
+  word3 = syllabe_vs.capitalize + complex_vowels + syllabe_cs
+  word4 = syllabe_cs.capitalize + double_consonants + complex_vowels + syllabe_cs
+  word5 = syllabe_vs.capitalize + complex_vowels + syllabe_cs + " - " + syllabe_vs + complex_vowels + syllabe_cs
+  word6 = syllabe_vs.capitalize + complex_vowels + syllabe_cs + " - " + vowels + double_consonants + complex_vowels + consonants
+  word7 = consonants.capitalize + complex_vowels + consonants + " - " + vowels + consonants + complex_vowels + double_consonants + vowels
+  word8 = syllabe_cs.capitalize + double_consonants + vowels + " " + syllabe_vs + syllabe_vs + vowels
+  word9 = syllabe_cs.capitalize + double_consonants + " " + vowels + double_consonants + vowels + consonants
+  word10 = syllabe_cs.capitalize + syllabe_cs + " " + syllabe_cs + syllabe_cs
+  word11 = syllabe_cs.capitalize + double_consonants + " " + syllabe_cs + syllabe_cs
+  word12 = syllabe_cs.capitalize + syllabe_cs + " " + syllabe_cs + double_consonants
+  words = [word1, word2, word3, word4, word5, word6, word7, word8, word9, word10, word11, word12]
+  random_word = words.sample
+end
+
+def digram_for_galaxies
+  word1 = consonants.capitalize + complex_vowels + decimals + decimals + complex_consonants + vowels
+  word2 = syllabe_cs.capitalize + consonants + complex_vowels + decimals + vowels + decimals + decimals
+  word3 = syllabe_vs.capitalize + decimals + complex_vowels + consonants + vowels
+  word4 = digram.capitalize
+  word5 = decimals + decimals + consonants + syllabe_cs + decimals + "-" + syllabe_cs
+  words = [word1, word2, word3, word4, word5]
+  random_word = words.sample
+end
+
+def digram_for_suns
+  word1 = consonants.capitalize + consonants + vowels + "-" +  decimals + decimals
+  word2 = consonants.capitalize + vowels + consonants + "-" + decimals + decimals + vowels.capitalize
+  word3 = syllabe_vs.capitalize + decimals + complex_vowels + consonants + vowels
+  word4 = digram.capitalize
+  word5 = decimals + decimals + consonants + syllabe_cs + decimals + "-" + consonants.capitalize + vowels.capitalize
+  words = [word1, word2, word3, word4, word5]
+  random_word = words.sample
+end
+
+
+def polymorph_name(type)
+  if type.is_a?(Galaxy)
+    name = digram_for_galaxies
+  elsif type.is_a?(Sun)
+    name = digram_for_suns
+  elsif type.is_a?(Planet)
+    name = digram
+  elsif type.is_a?(Moon)
+  end
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -277,6 +413,30 @@ def balanced_radius(planet_radius, planet_mass, planet_distance)
     planet_radius
   end
 end
+
+
+def adjusted_planet_distance(planet_radius, last_planet)
+  lp_radius = last_planet.radius
+  lp_distance = last_planet.solar_distance
+  distance = (lp_distance + (lp_radius * 2)) + fullrange_dist
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def balanced_mass(planet_radius, planet_mass)
@@ -695,11 +855,11 @@ end
 def solar_class(radius, mass)
   if radius > 150 and radius < 200
     solar_class = "O"
-  elsif radius < 0.3 and mass > 2000
+  elsif radius < 0.5 and mass > 2000
     solar_class = "MBH"
   elsif radius < 0.3 and mass > 1000
     solar_class = "BH"
-  elsif radius < 0.3 and mass > 500
+  elsif radius < 1.3 and mass > 500
     solar_class = "NE"
   elsif radius > 100 and radius < 150
     solar_class = "B"
@@ -762,10 +922,26 @@ end
 
 
 
-def random_moon_orbital_period
-  a = rand(0.000...860.000)
-  a2 = a.round(4)
-  a2
+def random_moon_orbital_period(distance)
+  if distance >= 5 and distance < 10
+    a = rand(0.000...100.000)
+    a2 = a.round(4)
+  elsif distance >= 10 and distance < 20
+    a = rand(100.000...260.000)
+    a2 = a.round(4)
+  elsif distance >= 20 and distance < 30
+    a = rand(260.000...360.000)
+    a2 = a.round(4)
+  elsif distance >= 30 and distance < 40
+    a = rand(360.000...460.000)
+    a2 = a.round(4)
+  elsif distance >= 40 and distance < 50
+    a = rand(460.000...560.000)
+    a2 = a.round(4)
+  elsif distance >= 50
+    a = rand(560.000...1260.000)
+    a2 = a.round(4)
+  end
 end
 
 
@@ -807,102 +983,88 @@ end
 
 
 
-def random_moon_number
-  number1 = 0
-  number2 = 0
-  number3 = 0
-  number4 = 1
-  number5 = rand(0..3)
-  number6 = rand(1..5)
-  number7 = rand(4..7)
-  numbers = [number1, number2, number3, number4, number5, number6, number7]
+def random_moon_number(planet_distance)
+  if planet_distance > 1
+    number5 = rand(0..3)
+    number6 = rand(1..5)
+    number7 = rand(4..7)
+    numbers = [0, 0, 0, 1, number5, number6, number7]
+    random_number = numbers.sample
+    random_number
+  else
+    number = 0
+  end
+end
+
+
+def random_moon_distance(planet_radius)
+  numbers = [dynamic_random_number(5, 10),
+             dynamic_random_number(5, 10),
+             dynamic_random_number(5, 15),
+             dynamic_random_number(5, 15),
+             dynamic_random_number(5, 40),
+             dynamic_random_number(10, 50),
+             dynamic_random_number(20, 50)]
   random_number = numbers.sample
-  random_number
-end
-
-
-def random_moon_distance
-  number1 = rand(5..10)
-  number2 = rand(5..15)
-  number3 = rand(5..10)
-  number4 = rand(5..15)
-  number5 = rand(5..40)
-  number6 = rand(10..35)
-  number7 = rand(15..20)
-  numbers = [number1, number2, number3, number4, number5, number6, number7]
-  random_number = numbers.sample
-  random_number
+  planet_radius + random_number
 end
 
 
 
-
-
-def random_planet_number
-  number1 = rand(1..3)
-  number2 = rand(1..3)
-  number3 = rand(1..5)
-  number4 = rand(1..5)
-  number5 = rand(1..5)
-  number6 = rand(2..7)
-  number7 = rand(7..14)
-  numbers = [number1, number2, number3, number4, number5, number6, number7]
-  random_number = numbers.sample
+def random_planet_number(sun_radius)
+  if sun_radius > 0 and sun_radius < 5
+    values = [ dynamic_random_number(1, 5), dynamic_random_number(1, 6), dynamic_random_number(1, 7)]
+    value = values.sample
+    return value
+  elsif sun_radius >= 5 and sun_radius < 20
+    values = [ dynamic_random_number(2, 8), dynamic_random_number(3, 9), dynamic_random_number(3, 12)]
+    value = values.sample
+    return value
+  elsif sun_radius >=20
+    values = [ dynamic_random_number(2, 8), dynamic_random_number(4, 10), dynamic_random_number(8, 20)]
+    value = values.sample
+    return value
+  end
 end
 
-
-def random_sun_name
-    voy = ["a", "e", "i", "o", "u", "y"]
-    cons = ["b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "z"]
-    numbers = ["0","1","2","3","4","5","6","7","8","9"]
-    word1 = cons.sample.capitalize + numbers.sample + numbers.sample + voy.sample.capitalize + numbers.sample
-    word2 = cons.sample.capitalize + numbers.sample + numbers.sample + voy.sample.capitalize + numbers.sample
-    word3 = cons.sample.capitalize + numbers.sample + numbers.sample + voy.sample.capitalize + numbers.sample
-    word4 = cons.sample.capitalize + numbers.sample + numbers.sample + voy.sample.capitalize + numbers.sample
-    words = [word1, word2, word3, word4]
-    random_word = words.sample
-end
-
-def random_planet_name
-  voy = ["a", "e", "i", "o", "u", "y"]
-  cons = ["b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "z"]
-  repeat_voy = ["ae", "ai", "ao", "au", "ay", "ea", "ei", "eo", "eu", "ey", "ia", "ie", "io", "iu", "iy", "oa", "oe", "oi", "ou", "oy", "oo", "ua", "ue", "ui", "uo", "uy", "ya", "ye", "yi", "yo"]
-  repeat_cons = ["bl", "br", "cl", "ch", "cr", "chr", "dr", "fr", "fl", "gl", "gr", "gh", "kr", "pr", "st", "sw", "sv", "tr", "qu"]
-  word1 = cons.sample + repeat_voy.sample + cons.sample + voy.sample + repeat_cons.sample + voy.sample
-  word2 = voy.sample + cons.sample + repeat_voy.sample + cons.sample + voy.sample + repeat_cons.sample + voy.sample
-  word3 = voy.sample + cons.sample + repeat_voy.sample + cons.sample + voy.sample
-  word4 = cons.sample + voy.sample + cons.sample + repeat_voy.sample + cons.sample + voy.sample
-  word5 = voy.sample + cons.sample + repeat_voy.sample + cons.sample + voy.sample + " - " + voy.sample + cons.sample + repeat_voy.sample + cons.sample + voy.sample
-  words = [word1, word2, word3, word4, word5]
-  random_word = words.sample
-end
 
 def random_solar_distance
   rand(0.0001...4.0000)
 end
+
+def galaxy_type
+  types = ["spiral","elliptical","irregular","lenticular"]
+  types.sample
+end
+
+
+
 
 
 class Galaxy < ActiveRecord::Base
   has_many :suns, dependent: :destroy
 
   def self.constructor
-    random_name = ["AX22", "VB67", "LM56", "HJ87", "ML04", "FS34"].sample
+
     @random_number_of_sun = rand(50..500)
-    @galaxy = Galaxy.create(name:"#{random_name}", number_of_suns: @random_number_of_sun)
+    @galaxy = Galaxy.new
+    @galaxy.name = polymorph_name(@galaxy)
+    @galaxy.number_of_suns = @random_number_of_sun
+    @galaxy.galaxy_type = galaxy_type
+    @galaxy.save
 
     @random_number_of_sun.times do
-      @random_solar_name = random_sun_name
+
       @random_solar_distance = random_solar_distance
-      @random_number_of_planet = random_planet_number
       @random_ecliptic_distance = random_ecliptic_distance
       @random_solar_mass = random_solar_numbers
       @random_solar_radius = random_solar_numbers
+      @random_number_of_planet = random_planet_number(@random_solar_radius)
       @solar_class = solar_class(@random_solar_radius, @random_solar_mass)
       @solar_type = solar_type(@solar_class)
       @chromaticity = solar_chromaticity(@solar_class)
       @solar_color = solar_color(@chromaticity)
-      @sun = Sun.create(name: "#{@random_solar_name}",
-                        solar_distance: @random_solar_distance,
+      @sun = Sun.create(solar_distance: @random_solar_distance,
                         number_of_planets: @random_number_of_planet,
                         galaxy_id: @galaxy.id,
                         mass: @random_solar_mass,
@@ -912,13 +1074,25 @@ class Galaxy < ActiveRecord::Base
                         solar_color: @solar_color,
                         radius: @random_solar_radius,
                         ecliptic_distance: @random_ecliptic_distance)
+      @sun.name = polymorph_name(@sun)
+      @sun.save
+
+
       @random_number_of_planet.times do
-        @random_planet_name = random_planet_name
-        @random_solar_to_planet_distance = fullrange_dist
+
         @temp_planet_radius = fullrange
         @temp_planet_mass = fullrange
-        @random_planet_radius = balanced_radius(@temp_planet_radius, @temp_planet_mass, @random_solar_to_planet_distance)
-        @random_planet_mass = balanced_mass(@temp_planet_radius, @temp_planet_mass)
+
+        if @sun.planets.any?
+          @last_planet = @sun.planets.last
+          @random_solar_to_planet_distance = adjusted_planet_distance(@temp_planet_radius, @last_planet)
+        else
+          @random_solar_to_planet_distance = fullrange_dist
+        end
+
+
+        @random_planet_radius = @temp_planet_radius
+        @random_planet_mass = @temp_planet_mass
         @orbital_period = orbital_period(@random_solar_radius, @random_solar_mass, @random_solar_to_planet_distance)
         @orbital_speed = orbital_speed(@random_solar_radius, @random_solar_mass, @random_solar_to_planet_distance)
         @gravity = gravity(@random_planet_mass, @random_planet_radius)
@@ -930,9 +1104,10 @@ class Galaxy < ActiveRecord::Base
         @planet_color = planet_color(@planet_type)
         @life = presence_of_life(@temperature, @liquid_water)
         @rotation_period = fullrange_dist
-        @random_moon_number = random_moon_number
-        @planet = Planet.create(name: "#{@random_planet_name}",
-                      radius: @random_planet_radius,
+        @random_moon_number = random_moon_number(@random_solar_to_planet_distance)
+
+
+        @planet = Planet.create(radius: @random_planet_radius,
                       mass: @random_planet_mass,
                       sun_id: @sun.id,
                       solar_distance: @random_solar_to_planet_distance,
@@ -950,9 +1125,12 @@ class Galaxy < ActiveRecord::Base
                       life: @life,
                       moon_number: @random_moon_number,
                       solar_mass: @random_solar_mass)
+        @planet.name = polymorph_name(@planet)
+        @planet.save
+
             @random_moon_number.times do
-              @random_moon_distance = random_moon_distance
-              @random_moon_orbital = random_moon_orbital_period
+              @random_moon_distance = random_moon_distance(@planet.radius)
+              @random_moon_orbital = random_moon_orbital_period(@random_moon_distance)
               Moon.create(name: "#{@random_planet_name}",
                       radius: @random_planet_radius,
                       mass: @random_planet_mass,
