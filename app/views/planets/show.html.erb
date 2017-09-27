@@ -59,6 +59,12 @@
       var flatalpha = new THREE.TextureLoader().load( '<%= image_path('flatalpha1.png')%>' );
       var sun = new THREE.TextureLoader().load( '<%= image_path('sun.jpg')%>' );
       var randomclouds = new THREE.TextureLoader().load( clouds.sample() );
+      var normalmap = new THREE.TextureLoader().load( '<%= image_path('CliffJagged004_NRM_6K.jpg')%>' );
+      var occlusionmap = new THREE.TextureLoader().load( '<%= image_path('CliffJagged004_AO_6K.jpg')%>' );
+      var dispmap = new THREE.TextureLoader().load( '<%= image_path('CliffJagged004_DISP_VAR2_6K.jpg')%>' );
+      var emmimap = new THREE.TextureLoader().load( '<%= image_path('CliffJagged004_REFL_6K.jpg')%>' );
+      var colormap = new THREE.TextureLoader().load( '<%= image_path('CliffJagged004_COL_VAR2_6K.jpg')%>' );
+      var glossmap = new THREE.TextureLoader().load( '<%= image_path('CliffJagged004_GLOSS_6K.jpg')%>' );
 
       var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.2, 10 );
       directionalLight.position.set( -1, 0.5, 1 );
@@ -90,7 +96,7 @@
 
 
 
-      var truebluelight2 = new THREE.DirectionalLight( rubysuncolor, 2.5, 15 );
+      var truebluelight2 = new THREE.DirectionalLight( rubysuncolor, 2.0, 15 );
       truebluelight2.position.set( 0, 0, 0 );
       truebluelight2.castShadow = true;
       truebluelight2.shadowDarkness = 5.50;
@@ -187,7 +193,7 @@
 
 
       var geometry = new THREE.SphereGeometry(3.50, 64, 64);
-      var material = new THREE.MeshStandardMaterial( {color: rubysuncolor,alphaMap: alphasun,shininess: 5, emissiveMap: alpha4,emissive: rubysuncolor,emissiveIntensity: 12,transparent: true,opacity: 1.5} );
+      var material = new THREE.MeshStandardMaterial( {color: rubysuncolor,alphaMap: alphasun,shininess: 2, emissiveMap: alphasun,emissive: rubysuncolor,emissiveIntensity: 3,transparent: true,opacity: 1.5} );
       var glow2 = new THREE.Mesh( geometry, material );
       glow2.rotation.set( 0, -1.6, 0 );
 
@@ -210,7 +216,7 @@
 
       var groupatmo2 = new THREE.Group();
       groupatmo2.add( glow2 );
-      groupatmo2.add( glow3 );
+      // groupatmo2.add( glow3 );
 
 
 
@@ -223,12 +229,39 @@
       twodblurforsun.position.set(0,0,10);
 
 
-
-
       var groupsunglow = new THREE.Group();
       groupsunglow.add( groupatmo2 );
-      groupsunglow.add( twodblurforsun );
+      // groupsunglow.add( twodblurforsun );
       scene.add( groupsunglow );
+
+
+
+
+
+
+
+
+
+
+
+
+      var geometry = new THREE.SphereGeometry( 0.05, 64, 64 );
+      var material = new THREE.MeshStandardMaterial( { map: colormap, roughness: 0.6, normalMap: normalmap, aoMap: occlusionmap, displacementMap: dispmap, displacementScale: 0.004, precision: "highhp", metalness: 0.4, emissiveMap: emmimap, emissive: planetcolor, emissiveIntensity: 0.6} );
+      var newsphere = new THREE.Mesh( geometry, material );
+      newsphere.position.set(0,0,-2);
+      scene.add( newsphere );
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -261,12 +294,20 @@
 
 
 
+
+
+
+
+
+
+
       camera.position.z = 5;
 
       var render = function () {
         requestAnimationFrame( render );
-        cube.rotation.y -= 0.001;
-        atmo.rotation.y -= 0.002;
+        cube.rotation.y -= 0.0005;
+        atmo.rotation.y -= 0.001;
+        newsphere.rotation.y -= 0.001;
         var time = Date.now();
         moon.position.x = Math.cos( time * 0.00005 )*2;
         moon.position.z = Math.sin( time * 0.00005 )*2;
